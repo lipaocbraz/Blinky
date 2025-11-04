@@ -1,17 +1,22 @@
 #include <raylib.h>
+#include <scene.h>
 
 int main(void)
 {
-    InitWindow(800, 450, "Hello Raylib");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello Raylib");
+    SetTargetFPS(60);
+
+    InitScene();
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawText("Ola Raylib no macOS!", 190, 200, 20, LIGHTGRAY);
+        drawscene();
         EndDrawing();
     }
 
+    UnloadScene();
     CloseWindow();
     return 0;
 }
