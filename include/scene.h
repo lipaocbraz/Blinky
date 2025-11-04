@@ -1,6 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
-#define TILE_SIZE 20
+#define TILE_SIZE 16
 #define HEIGHT 21
 #define WIDTH 42
 #define WINDOW_HEIGHT (HEIGHT * TILE_SIZE)

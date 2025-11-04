@@ -46,9 +46,9 @@ void InitScene()
 
 void drawscene()
 {
-    for (int i = 0; i < 19; i++)
+    for (int i = 0; i < HEIGHT; i++)
     {
-        for (int j = 0; j < 39; j++)
+        for (int j = 0; j < WIDTH; j++)
         {
             Texture2D tile;
             switch (map[i][j])
@@ -66,7 +66,7 @@ void drawscene()
                 tile = floor_3;
                 break;
             }
-            DrawTexture(tile, WINDOW_HEIGHT, WINDOW_WIDTH, WHITE);
+            DrawTexture(tile, j * TILE_SIZE, i * TILE_SIZE, WHITE);
         }
     }
 }
