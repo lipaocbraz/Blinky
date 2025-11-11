@@ -30,32 +30,70 @@ int main(void)
         {
             if (IsKeyPressed(KEY_Q))
             {
-                currentScreen = TITLE;
-                UnloadScene(&map1);
+                currentScreen = ENDING;
             }
         }
         case ENDING:
         {
-            if (IsKeyPressed(KEY_BACKSPACE))
-                break;
+            if (IsKeyPressed(KEY_P))
+            {
+                UnloadScene(&map1);
+            }
         }
 
             BeginDrawing();
+            ClearBackground(RAYWHITE);
+
             switch (currentScreen)
             {
             case TITLE:
             {
-                DrawText("Blinky", WINDOW_WIDTH / 2 - MeasureText("Blinky the Ghost", 40) / 2, WINDOW_HEIGHT / 4, 40, DARKPURPLE);
-                DrawText("Pressione ENTER para JOGAR", WINDOW_WIDTH / 2 - MeasureText("Pressione ENTER para JOGAR", 20) / 2, WINDOW_HEIGHT / 2, 20, BLACK);
+                int currentW = GetScreenWidth();
+                int currentH = GetScreenHeight();
+
+                const char *titulo = "MEU JOGO BLINKY";
+                int fontSizeTitulo = 40;
+
+                const char *instrucao = "Pressione ENTER para JOGAR";
+                int fontSizeInstrucao = 20;
+
+                // 1. Centralização do Título:
+                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
+                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+                int yTitulo = currentH / 4;
+
+                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, DARKBLUE);
+
+                // 2. Centralização da Instrução:
+                int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
+                int yInstrucao = currentH / 2;
+
+                DrawText(instrucao, xInstrucao, yInstrucao, fontSizeInstrucao, BLACK);
             }
             break;
+
             case GAMEPLAY:
             {
                 DrawScene(&map1);
             }
+            break;
             case ENDING:
             {
-                DrawText("GAME OVER!", WINDOW_WIDTH / 2 - MeasureText("GAME OVER!", 40) / 2, WINDOW_HEIGHT / 2, 40, RED);
+                int currentW = GetScreenWidth();
+                int currentH = GetScreenHeight();
+
+                const char *titulo = "GAME OVER";
+                int fontSizeTitulo = 40;
+
+                const char *instrucao = "APERTE 'DELETE' PARA SAIR";
+                int fontSizeInstrucao = 20;
+
+                // 1. Centralização do Título:
+                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
+                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+                int yTitulo = currentH / 4;
+
+                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
             }
             break;
             }
