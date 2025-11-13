@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <scene.h>
 #include "game.h"
+#include "player.h"
 
 int main(void)
 {
@@ -11,6 +12,7 @@ int main(void)
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
     Scene map1;
+    Player hero;
 
     ClearBackground(RAYWHITE);
     while (!WindowShouldClose())
@@ -24,10 +26,12 @@ int main(void)
             {
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/map1.png");
+                initPlayer(&hero, "assets/player.png");
             }
         }
         case GAMEPLAY:
         {
+            updatePlayer(&hero);
             if (IsKeyPressed(KEY_Q))
             {
                 currentScreen = ENDING;
@@ -74,7 +78,9 @@ int main(void)
 
             case GAMEPLAY:
             {
+
                 DrawScene(&map1);
+                drawPlayer(&hero);
             }
             break;
             case ENDING:
@@ -104,6 +110,7 @@ int main(void)
     if (currentScreen == GAMEPLAY)
     {
         UnloadScene(&map1);
+        unloadPlayer(&hero);
     }
     CloseWindow();
     return 0;
