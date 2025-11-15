@@ -13,6 +13,7 @@ void InitScene(Scene *scene, const char *imagePath)
 
 void DrawScene(Scene *scene)
 {
+    Color color_tarja = BLACK;
     // 1. Obtém as dimensões atuais da tela (dinâmicas)
     float screenWidth = (float)GetScreenWidth();
     float screenHeight = (float)GetScreenHeight();
@@ -29,7 +30,7 @@ void DrawScene(Scene *scene)
 
     // Escolhe o fator de escala MAIOR (fmaxf) para garantir que o mapa COBRE toda a tela.
     // Isso evita tarjas brancas, mas causa o efeito "zoom" (corte nas bordas).
-    float scale = fmaxf(scaleX, scaleY);
+    float scale = fminf(scaleX, scaleY);
 
     // --- Dimensões Finais do Mapa na Tela ---
     float scaledWidth = mapWidth * scale;

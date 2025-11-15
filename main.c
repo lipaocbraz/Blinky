@@ -14,7 +14,6 @@ int main(void)
     Scene map1;
     Player hero;
 
-    ClearBackground(RAYWHITE);
     while (!WindowShouldClose())
     {
         switch (currentScreen)
@@ -25,7 +24,7 @@ int main(void)
             if (IsKeyPressed(KEY_ENTER))
             {
                 currentScreen = GAMEPLAY;
-                InitScene(&map1, "assets/map1.png");
+                InitScene(&map1, "assets/Cenario_medieval.png");
                 initPlayer(&hero, "assets/player.png");
             }
         }
