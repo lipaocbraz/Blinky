@@ -9,6 +9,7 @@
 void InitScene(Scene *scene, const char *imagePath)
 {
     scene->map1 = LoadTexture(imagePath);
+    scene->collision_image = LoadImage("assets/collision_map.png");
 }
 
 void DrawScene(Scene *scene)
@@ -58,4 +59,5 @@ void DrawScene(Scene *scene)
 void UnloadScene(Scene *scene)
 {
     UnloadTexture(scene->map1);
+    UnloadImage(scene->collision_image);
 }

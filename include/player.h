@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <raylib.h>
+#include "scene.h"
 
 typedef struct Player
 {
@@ -10,7 +11,7 @@ typedef struct Player
 } Player;
 
 void initPlayer(Player *p, const char *texturePath);
-void updatePlayer(Player *p);
+void UpdatePlayer(Player *p, Scene *scene);
 void drawPlayer(Player *p);
 void unloadPlayer(Player *p);
 

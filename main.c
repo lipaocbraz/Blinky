@@ -30,7 +30,7 @@ int main(void)
         }
         case GAMEPLAY:
         {
-            updatePlayer(&hero);
+            UpdatePlayer(&hero, &map1);
             if (IsKeyPressed(KEY_Q))
             {
                 currentScreen = ENDING;
@@ -45,7 +45,7 @@ int main(void)
         }
 
             BeginDrawing();
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
             switch (currentScreen)
             {

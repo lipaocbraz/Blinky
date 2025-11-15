@@ -1,6 +1,8 @@
 #include "player.h"
 #include "raylib.h"
 
+bool collisionpixel(Image *map, float x, float y);
+
 void initPlayer(Player *p, const char *texturePath)
 {
 
@@ -14,23 +16,33 @@ void initPlayer(Player *p, const char *texturePath)
     TraceLog(LOG_INFO, "PLAYER: Heroi inicializado.");
 }
 
-void updatePlayer(Player *p)
+void UpdatePlayer(Player *p, Scene *scene)
 {
-    if (IsKeyDown(KEY_A))
+    float newX = p->position.x;
+    float newY = p->position.y;
+
+    // --- Cálculo do Novo Ponto ---
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+        newX += p->speed;
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+        newX -= p->speed;
+    if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+        newY += p->speed;
+    else if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+        newY -= p->speed;
+
+    // --- Colisão Horizontal ---
+    // Verifica o novo ponto X com a posição Y atual (ou um ponto de colisão específico no sprite)
+    if (!collisionpixel(&scene->collision_image, newX, p->position.y))
     {
-        p->position.x -= p->speed;
+        p->position.x = newX; // Movimento permitido
     }
-    if (IsKeyDown(KEY_D))
+
+    // --- Colisão Vertical ---
+    // Verifica a posição X atual com o novo ponto Y
+    if (!collisionpixel(&scene->collision_image, p->position.x, newY))
     {
-        p->position.x += p->speed;
-    }
-    if (IsKeyDown(KEY_W))
-    {
-        p->position.y -= p->speed;
-    }
-    if (IsKeyDown(KEY_S))
-    {
-        p->position.y += p->speed;
+        p->position.y = newY; // Movimento permitido
     }
 }
 
@@ -43,4 +55,19 @@ void unloadPlayer(Player *p)
 {
     UnloadTexture(p->texture);
     TraceLog(LOG_INFO, "Heroi descarregado");
+}
+
+bool collisionpixel(Image *map, float x, float y)
+{
+    int px = (int)x;
+    int py = (int)y;
+
+    if (px < 0 || px >= map->width || py < 0 || py >= map->height)
+    {
+        return true;
+    }
+
+    Color pixelcolor = GetImageColor(*map, px, py);
+
+    return (pixelcolor.r == 0 && pixelcolor.g == 0 && pixelcolor.b == 0);
 }
