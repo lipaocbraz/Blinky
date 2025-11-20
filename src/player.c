@@ -16,12 +16,17 @@ void initPlayer(Player *p, const char *texturePath)
     TraceLog(LOG_INFO, "PLAYER: Heroi inicializado.");
 }
 
+// Certifique-se de que playerWidth e playerHeight estão definidos ou são 32 e 32.
+const float playerWidth = 32.0f;
+const float playerHeight = 32.0f;
+
 void UpdatePlayer(Player *p, Scene *scene)
 {
     float newX = p->position.x;
     float newY = p->position.y;
 
-    // --- Cálculo do Novo Ponto ---
+    // --- CÁLCULO DO NOVO PONTO ---
+    // (Seu código de movimento, permanece o mesmo)
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
         newX += p->speed;
     else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
@@ -32,23 +37,51 @@ void UpdatePlayer(Player *p, Scene *scene)
         newY -= p->speed;
 
     // --- Colisão Horizontal ---
-    // Verifica o novo ponto X com a posição Y atual (ou um ponto de colisão específico no sprite)
-    if (!collisionpixel(&scene->collision_image, newX, p->position.y))
+
+    // 1. Ponto de Colisão na TELA (Base central do personagem)
+    float screenCollisionX = newX + playerWidth / 2.0f;
+    float screenCollisionY = p->position.y + playerHeight;
+
+    // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
+    float imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
+    float imageY = (screenCollisionY - scene->offsetMap.y) / scene->mapScale;
+
+    // Colisão Horizontal: Verifica o novo X com o Y convertido
+    if (!collisionpixel(&scene->collision_image, imageX, imageY))
     {
-        p->position.x = newX; // Movimento permitido
+        p->position.x = newX;
     }
 
     // --- Colisão Vertical ---
-    // Verifica a posição X atual com o novo ponto Y
-    if (!collisionpixel(&scene->collision_image, p->position.x, newY))
+
+    // 1. Ponto de Colisão na TELA (Base central do personagem, nova Y)
+    screenCollisionX = p->position.x + playerWidth / 2.0f; // X atual
+    screenCollisionY = newY + playerHeight;                // Novo Y
+
+    // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
+    imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
+    imageY = (screenCollisionY - scene->offsetMap.y) / scene->mapScale;
+
+    // Colisão Vertical: Verifica o X atual com o novo Y convertido
+    if (!collisionpixel(&scene->collision_image, imageX, imageY))
     {
-        p->position.y = newY; // Movimento permitido
+        p->position.y = newY;
     }
 }
 
 void drawPlayer(Player *p)
 {
     DrawTextureV(p->texture, p->position, WHITE);
+    // --- ADICIONE ESTE CÓDIGO DE DEBUG ---
+    const float playerHeight = 32.0f; // Assumindo 32
+    const float playerWidth = 32.0f;  // Assumindo 32
+
+    // Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
+    float debugX = p->position.x + playerWidth / 2.0f;
+    float debugY = p->position.y + playerHeight;
+
+    // Desenha um pequeno círculo vermelho no ponto exato de colisão
+    DrawCircle((int)debugX, (int)debugY, 3, RED);
 }
 
 void unloadPlayer(Player *p)
