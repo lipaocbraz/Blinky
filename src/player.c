@@ -8,7 +8,7 @@ void initPlayer(Player *p, const char *texturePath)
 
     p->texture = LoadTexture(texturePath);
 
-    p->speed = 4.0f;
+    p->speed = 1.7f;
 
     p->position.x = (float)GetScreenWidth() / 2.0f - (float)p->texture.width / 2.0f;
     p->position.y = (float)GetScreenHeight() / 2.0f - (float)p->texture.height / 2.0f;
