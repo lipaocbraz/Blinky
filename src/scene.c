@@ -12,8 +12,37 @@ void InitScene(Scene *scene, const char *imagePath)
     scene->collision_image = LoadImage("assets/collision_map.png");
 }
 
+void CalculateMap(Scene *scene)
+{
+    float screenWidth = (float)GetScreenWidth();
+    float screenHeight = (float)GetScreenHeight();
+    float mapWidth = (float)scene->map1.width;
+    float mapHeight = (float)scene->map1.height;
+
+    float scaleX = screenWidth / mapWidth;
+    float scaleY = screenHeight / mapHeight;
+
+    // 1. FATOR DE ESCALA UNIFICADO (fmaxf para "Cover")
+    float scale = fmaxf(scaleX, scaleY);
+
+    // 2. DIMENSÕES ESCALADAS USANDO O FATOR UNIFICADO
+    float scaledWidth = mapWidth * scale;   // CORREÇÃO: Usar 'scale'
+    float scaledHeight = mapHeight * scale; // CORREÇÃO: Usar 'scale'
+
+    // 3. CÁLCULO DE OFFSET
+    float offSetX = (screenWidth - scaledWidth) * 0.5f;
+    float offSetY = (screenHeight - scaledHeight) * 0.5f;
+
+    // 4. ARMAZENAMENTO
+    scene->mapScale = scale;
+    scene->offsetMap = (Vector2){offSetX, offSetY};
+}
+
 void DrawScene(Scene *scene)
 {
+
+    CalculateMap(scene);
+
     Color color_tarja = BLACK;
     // 1. Obtém as dimensões atuais da tela (dinâmicas)
     float screenWidth = (float)GetScreenWidth();
@@ -31,7 +60,7 @@ void DrawScene(Scene *scene)
 
     // Escolhe o fator de escala MAIOR (fmaxf) para garantir que o mapa COBRE toda a tela.
     // Isso evita tarjas brancas, mas causa o efeito "zoom" (corte nas bordas).
-    float scale = fminf(scaleX, scaleY);
+    float scale = fmaxf(scaleX, scaleY);
 
     // --- Dimensões Finais do Mapa na Tela ---
     float scaledWidth = mapWidth * scale;
