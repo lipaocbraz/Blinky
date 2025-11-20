@@ -8,20 +8,21 @@
 
 void InitScene(Scene *scene, const char *imagePath)
 {
-    scene->map1 = LoadTexture(imagePath);
+    scene->map = LoadTexture(imagePath);
     scene->collision_image = LoadImage("assets/collision_map.png");
 }
 
 void DrawScene(Scene *scene)
 {
     Color color_tarja = BLACK;
+    
     // 1. Obtém as dimensões atuais da tela (dinâmicas)
     float screenWidth = (float)GetScreenWidth();
     float screenHeight = (float)GetScreenHeight();
 
     // 2. Obtém as dimensões da imagem do mapa
-    float mapWidth = (float)scene->map1.width;
-    float mapHeight = (float)scene->map1.height;
+    float mapWidth = (float)scene->map.width;
+    float mapHeight = (float)scene->map.height;
 
     // --- CÁLCULO PARA EVITAR DEFORMAÇÃO (Mantém a proporção) ---
 
@@ -53,11 +54,11 @@ void DrawScene(Scene *scene)
         scaledHeight // Altura escalada (mantendo proporção)
     };
 
-    DrawTexturePro(scene->map1, sourceRec, destRec, (Vector2){0, 0}, 0.0f, WHITE);
+    DrawTexturePro(scene->map, sourceRec, destRec, (Vector2){0, 0}, 0.0f, WHITE);
 }
 
 void UnloadScene(Scene *scene)
 {
-    UnloadTexture(scene->map1);
+    UnloadTexture(scene->map);
     UnloadImage(scene->collision_image);
 }

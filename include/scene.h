@@ -4,7 +4,7 @@
 
 typedef struct Scene
 {
-    Texture2D map1;
+    Texture2D map;
     Image collision_image;
 
 } Scene;

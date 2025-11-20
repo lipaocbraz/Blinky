@@ -14,10 +14,11 @@ int main(void)
 {
 
     // Configurações da Janela
-
     int WINDOW_WIDTH = GetMonitorWidth(0);
     int WINDOW_HEIGHT = GetMonitorHeight(0);
 
+    // A janela é iniciada com currentScreen = TITLE. Ao entrar no loop, os dois casos TITLE do switch são
+    // acionados sequencialmente, até que o jogador pressione ENTER, mudando currentScreen para GAMEPLAY.
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Blinky");
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
@@ -42,8 +43,10 @@ int main(void)
 
         case TITLE:
         {
+            
             if (IsKeyPressed(KEY_ENTER))
             {
+                //Não entendi
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
                 initPlayer(&hero, "assets/player.png");
@@ -87,6 +90,7 @@ int main(void)
         }
         case GAMEPLAY:
         {
+            //Entender como funcionam essas atualizações
             UpdatePlayer(&hero, &map1);
             UpdateEnemy(&enemy1, GetFrameTime());
             UpdateEnemy(&enemy2, GetFrameTime());
@@ -94,7 +98,6 @@ int main(void)
             UpdateEnemy(&enemy4, GetFrameTime());
 
             // Captura de clique do mouse para mapeamento de pixels!!
-
             // --- CÁLCULO DAS COORDENADAS DO MOUSE MAPEADAS ---
             
 
@@ -103,6 +106,7 @@ int main(void)
                 currentScreen = ENDING;
             }
         }
+        
         case ENDING:
         {
             if (IsKeyPressed(KEY_P))
@@ -111,9 +115,11 @@ int main(void)
             }
         }
 
+
             BeginDrawing();
             ClearBackground(BLACK);
 
+            // Aqui temos a renderização de cada tela do jogo de fato 
             switch (currentScreen)
             {
             case TITLE:
@@ -142,6 +148,7 @@ int main(void)
             }
             break;
 
+            // O segundo mapa deve ser adicionado aqui
             case GAMEPLAY:
             {
                 DrawScene(&map1);
@@ -152,6 +159,7 @@ int main(void)
                 DrawEnemy(&enemy4, showDebug);  
             }
             break;
+
             case ENDING:
             {
                 int currentW = GetScreenWidth();
