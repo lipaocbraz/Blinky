@@ -3,9 +3,11 @@
 #include "game.h"
 #include "player.h"
 #include "enemy.h"
+#include <math.h> // Para fminf
 
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
 // gcc main.c src/*.c -I include -o blinky.exe -lraylib -lopengl32 -lgdi32 -lwinmm
+// MARGEM DE ERRO DA FUNÇÃO DE MAPEAMENTO DE PIXELS: X=~-36px, Y=~-36px (monitor 24 polegadas)
  
 
 int main(void)
@@ -20,12 +22,15 @@ int main(void)
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
     Scene map1;
+    int cliques;
     
     //Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
     
     Enemy enemy1;
     Enemy enemy2;
+    Enemy enemy3;
+    Enemy enemy4;
     enemy2.color = PURPLE;
     
     bool showDebug = true;
@@ -47,19 +52,36 @@ int main(void)
 
                 //Inimigos[1]
                 InitEnemy(&enemy1, (Vector2){235.0f, 431.0f}, 100.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy1, (Vector2){235.0f, 431.0f});
-                AddWaypoint(&enemy1, (Vector2){506.0f, 579.0f});
-                AddWaypoint(&enemy1, (Vector2){519.0f, 646.0f});
-                AddWaypoint(&enemy1, (Vector2){990.0f, 826.0f});
-                AddWaypoint(&enemy1, (Vector2){1241.0f, 636.0f});
-                AddWaypoint(&enemy1, (Vector2){1376.0f, 642.0f});
+                AddWaypoint(&enemy1, (Vector2){507.0f, 569.0f});
+                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});                
+                AddWaypoint(&enemy1, (Vector2){710.0f, 743.0f});
+                AddWaypoint(&enemy1, (Vector2){1115.0f, 891.0f});
+                AddWaypoint(&enemy1, (Vector2){1463.0f, 656.0f});
+                AddWaypoint(&enemy1, (Vector2){1634.0f, 669.0f});
 
                 //Inimigos[2]
-                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy2, (Vector2){600, 200});
-                AddWaypoint(&enemy2, (Vector2){600, 400});
-                AddWaypoint(&enemy2, (Vector2){400, 400});
-                
+                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy2, (Vector2){1372.0f, 320.0f});
+                AddWaypoint(&enemy2, (Vector2){1250.0f, 421.0f});
+                AddWaypoint(&enemy2, (Vector2){1141.0f, 474.0f});
+                AddWaypoint(&enemy2, (Vector2){1301.0f, 571.0f});
+                AddWaypoint(&enemy2, (Vector2){1193.0f, 469.0f});
+                AddWaypoint(&enemy2, (Vector2){973.0f, 401.0f});
+                AddWaypoint(&enemy2, (Vector2){1021.0f, 304.0f});
+
+                //Inimigos[3]
+                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy3, (Vector2){918.0f, 313.0f});
+                AddWaypoint(&enemy3, (Vector2){781.0f, 442.0f});
+                AddWaypoint(&enemy3, (Vector2){630.0f, 535.0f});
+                AddWaypoint(&enemy3, (Vector2){583.0f, 611.0f});
+
+                //Inimigos[4]
+                InitEnemy(&enemy4, (Vector2){1200.0f, 800.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&enemy4, (Vector2){633.0f, 589.0f});
+                AddWaypoint(&enemy4, (Vector2){664.0f, 658.0f});
+                AddWaypoint(&enemy4, (Vector2){789.0f, 652.0f});
+
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
             }
         }
@@ -68,6 +90,14 @@ int main(void)
             UpdatePlayer(&hero, &map1);
             UpdateEnemy(&enemy1, GetFrameTime());
             UpdateEnemy(&enemy2, GetFrameTime());
+            UpdateEnemy(&enemy3, GetFrameTime());
+            UpdateEnemy(&enemy4, GetFrameTime());
+
+            // Captura de clique do mouse para mapeamento de pixels!!
+
+            // --- CÁLCULO DAS COORDENADAS DO MOUSE MAPEADAS ---
+            
+
             if (IsKeyPressed(KEY_Q))
             {
                 currentScreen = ENDING;
@@ -118,6 +148,8 @@ int main(void)
                 drawPlayer(&hero);
                 DrawEnemy(&enemy1, showDebug);
                 DrawEnemy(&enemy2, showDebug);
+                DrawEnemy(&enemy3, showDebug);
+                DrawEnemy(&enemy4, showDebug);  
             }
             break;
             case ENDING:
@@ -152,125 +184,3 @@ int main(void)
     CloseWindow();
     return 0;
 }
-
-
-//------------------------------------------------------------------------------------
-// ------------------------MAPEADOR DE PIXELS EM TELA CHEIA---------------------------
-//------------------------------------------------------------------------------------
-
-// #include "raylib.h"
-// #include <math.h> // Para fminf
-
-// // --- CONFIGURAÇÃO DA IMAGEM ---
-// #define BACKGROUND_IMAGE_PATH "assets/Cenario_medieval.png"
-
-// // --- Configurações Iniciais ---
-// // Usamos a resolução do monitor (como você fez na sua main original)
-// const int MONITOR_ID = 0;
-
-// int main(void)
-// {
-//     // 1. Inicialização da Janela e Tela Cheia
-//     int screenWidth = GetMonitorWidth(MONITOR_ID);
-//     int screenHeight = GetMonitorHeight(MONITOR_ID);
-
-//     InitWindow(screenWidth, screenHeight, "Mapeador de Waypoints Autônomo - Raylib");
-//     //ToggleFullscreen(); 
-    
-//     SetTargetFPS(60); 
-
-//     // 2. Carregar a Textura
-//     Texture2D mapTexture = LoadTexture(BACKGROUND_IMAGE_PATH);
-    
-//     if (mapTexture.id == 0)
-//     {
-//         TraceLog(LOG_ERROR, "ERRO: Não foi possível carregar o mapa em %s", BACKGROUND_IMAGE_PATH);
-//         // Se falhar, use um tamanho padrão para evitar crash
-//         mapTexture.width = 100;
-//         mapTexture.height = 100;
-//     }
-
-//     // 3. Loop Principal
-//     while (!WindowShouldClose())
-//     {
-//         // --- VARIÁVEIS DE CÁLCULO DE ESCALA (replicando a lógica do DrawScene) ---
-        
-//         float currentScreenWidth = (float)GetScreenWidth();
-//         float currentScreenHeight = (float)GetScreenHeight();
-
-//         float mapWidth = (float)mapTexture.width;
-//         float mapHeight = (float)mapTexture.height;
-
-//         // Calcula o fator de escala (Garante que o mapa inteiro caiba na tela)
-//         float scaleX = currentScreenWidth / mapWidth;
-//         float scaleY = currentScreenHeight / mapHeight;
-//         float scale = fminf(scaleX, scaleY);
-        
-//         float scaledWidth = mapWidth * scale;
-//         float scaledHeight = mapHeight * scale;
-
-//         // Calcula o offset para centralizar o mapa
-//         float offsetX = (currentScreenWidth - scaledWidth) * 0.5f;
-//         float offsetY = (currentScreenHeight - scaledHeight) * 0.5f;
-
-//         // --- CÁLCULO DAS COORDENADAS DO MOUSE MAPEADAS ---
-//         Vector2 screenMouse = GetMousePosition();
-        
-//         // 1. Remove o OFFSET (tira a tarja)
-//         Vector2 mapRelative = {
-//             screenMouse.x - offsetX,
-//             screenMouse.y - offsetY
-//         };
-        
-//         // 2. Reverte a ESCALA
-//         Vector2 mapCoords = {
-//             mapRelative.x / scale,
-//             mapRelative.y / scale
-//         };
-
-//         // -----------------------------------------------------------------------
-//         // DESENHO
-//         // -----------------------------------------------------------------------
-//         BeginDrawing();
-
-//         ClearBackground(BLACK); // Fundo preto para as tarjas
-
-//         // Desenha o mapa (com escala e centralização)
-//         DrawTexturePro(
-//             mapTexture, 
-//             (Rectangle){ 0.0f, 0.0f, mapWidth, mapHeight }, // Source: Imagem inteira
-//             (Rectangle){ offsetX, offsetY, scaledWidth, scaledHeight }, // Dest: Na tela
-//             (Vector2){ 0.0f, 0.0f },
-//             0.0f,
-//             WHITE
-//         );
-
-//         // --- Desenho das Coordenadas Mapeadas ---
-        
-//         // Verifica se o mouse está DENTRO da área do mapa escalado (ignora a tarja)
-//         bool isInsideMap = (screenMouse.x >= offsetX && screenMouse.x < (offsetX + scaledWidth) &&
-//                             screenMouse.y >= offsetY && screenMouse.y < (offsetY + scaledHeight));
-
-//         const char* coordText = TextFormat(
-//             "MAPA COORDENADA: X: %.0f, Y: %.0f (Escala: %.2f)", 
-//             mapCoords.x, 
-//             mapCoords.y,
-//             scale
-//         );
-        
-//         Color textColor = isInsideMap ? YELLOW : RED;
-        
-//         DrawText(coordText, 10, 10, 20, textColor);
-        
-//         // Debug: Ponto no mouse (na tela)
-//         DrawCircleV(screenMouse, 4, WHITE);
-        
-//         EndDrawing();
-//     }
-
-//     // Descarregamento
-//     UnloadTexture(mapTexture); 
-//     CloseWindow();        
-
-//     return 0;
-// }
