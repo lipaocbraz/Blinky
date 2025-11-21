@@ -13,6 +13,9 @@ void initPlayer(Player *p, const char *texturePath)
     p->position.x = (float)GetScreenWidth() / 2.0f - (float)p->texture.width / 2.0f;
     p->position.y = (float)GetScreenHeight() / 2.0f - (float)p->texture.height / 2.0f;
 
+    p->width = 200.0f;  
+    p->height = 200.0f;  
+
     TraceLog(LOG_INFO, "PLAYER: Heroi inicializado.");
 }
 

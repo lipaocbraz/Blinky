@@ -16,8 +16,8 @@ void CalculateMap(Scene *scene)
 {
     float screenWidth = (float)GetScreenWidth();
     float screenHeight = (float)GetScreenHeight();
-    float mapWidth = (float)scene->map1.width;
-    float mapHeight = (float)scene->map1.height;
+    float mapWidth = (float)scene->map.width;
+    float mapHeight = (float)scene->map.height;
 
     float scaleX = screenWidth / mapWidth;
     float scaleY = screenHeight / mapHeight;

@@ -1,6 +1,6 @@
 #include "enemy.h"
 #include "raylib.h"
-
+#include "player.h"
 
 // Inicializa um inimigo com vários assets diferentes para animação, velocidade e posição inicial
 void InitEnemy(Enemy* enemy, Vector2 startPos, float speed, const char* firstFramePath) {
@@ -153,8 +153,15 @@ void DrawEnemy(Enemy* enemy, bool debug) {
     }
 }
 
-bool CheckEnemyCollision(Enemy* enemy, Rectangle rect) {
+bool CheckPlayerEnemyCollision(Player* player, Enemy* enemy) {
     if (!enemy->active) return false;
+    
+    Rectangle playerRect = {
+        player->position.x,
+        player->position.y,
+        player->width,
+        player->height
+    };
     
     Rectangle enemyRect = {
         enemy->position.x,
@@ -163,5 +170,5 @@ bool CheckEnemyCollision(Enemy* enemy, Rectangle rect) {
         enemy->height
     };
     
-    return CheckCollisionRecs(enemyRect, rect);
+    return CheckCollisionRecs(playerRect, enemyRect);
 }

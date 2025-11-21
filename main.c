@@ -100,9 +100,10 @@ int main(void)
             // Captura de clique do mouse para mapeamento de pixels!!
             // --- CÁLCULO DAS COORDENADAS DO MOUSE MAPEADAS ---
             
-
-            if (IsKeyPressed(KEY_Q))
-            {
+            
+            if (CheckPlayerEnemyCollision(&hero, &enemy1)) {
+                // Colisão detectada!
+                TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = ENDING;
             }
         }
