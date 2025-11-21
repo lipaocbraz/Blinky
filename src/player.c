@@ -3,11 +3,10 @@
 
 bool collisionpixel(Image *map, float x, float y);
 
-void initPlayer(Player *p, const char *texturePath)
+void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 {
 
     p->texture = LoadTexture(texturePath);
-
     p->speed = 1.7f;
 
     p->position.x = (float)GetScreenWidth() / 2.0f - (float)p->texture.width / 2.0f;

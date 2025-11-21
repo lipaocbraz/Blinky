@@ -15,7 +15,7 @@ typedef struct Player
 } Player;
 
 bool CheckPlayerEnemyCollision(Player* player, Enemy* enemy);
-void initPlayer(Player *p, const char *texturePath);
+void initPlayer(Player *p, const char *texturePath, Vector2 startPos);
 void UpdatePlayer(Player *p, Scene *scene);
 void drawPlayer(Player *p);
 void unloadPlayer(Player *p);

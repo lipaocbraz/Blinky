@@ -49,7 +49,7 @@ int main(void)
                 //Não entendi
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
-                initPlayer(&hero, "assets/player.png");
+                initPlayer(&hero, "assets/player.png", (Vector2){100.0f, 100.0f});
                 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
 
