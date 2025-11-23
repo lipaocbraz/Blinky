@@ -15,8 +15,8 @@ typedef struct {
     Vector2 position;
     Vector2 velocity;
     float speed;
-    float width;
-    float height;
+    float Xhitbox;
+    float Yhitbox;
     
     // Sistema de patrulha
     Vector2 waypoints[MAX_WAYPOINTS];
@@ -35,10 +35,10 @@ typedef struct {
     Color color;
 } Enemy;
 
-// Inicializa um inimigo com posição inicial e velocidade
+// Inicializa um inimigo
 void InitEnemy(Enemy* enemy, Vector2 startPos, float speed, const char* firstFramePath);
 
-// Adiciona um waypoint à rota de patrulha do inimigo
+// Adiciona um ponto de patrulha ao inimigo
 void AddWaypoint(Enemy* enemy, Vector2 waypoint);
 
 // Atualiza a lógica do inimigo (movimento e patrulha) (código correto, com o objeto colMap: void UpdateEnemy(Enemy* enemy, CollisionMap* colMap, float deltaTime);)
@@ -50,4 +50,4 @@ void DrawEnemy(Enemy* enemy, bool debug);
 // Verifica colisão entre o inimigo e um retângulo
 bool CheckEnemyCollision(Enemy* enemy, Rectangle rect);
 
-#endif // ENEMY_H
+#endif 

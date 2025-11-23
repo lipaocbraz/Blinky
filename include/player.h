@@ -10,8 +10,10 @@ typedef struct Player
     Vector2 position;
     float speed;
 
-    float width;   // Largura da hitbox
-    float height;  // Altura da hitbox
+    float Xhitbox;   // Largura da hitbox
+    float Yhitbox;  // Altura da hitbox
+
+    Rectangle rectangleHitbox; // Hitbox do jogador
 } Player;
 
 bool CheckPlayerEnemyCollision(Player* player, Enemy* enemy);

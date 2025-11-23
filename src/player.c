@@ -1,26 +1,27 @@
 #include "player.h"
 #include "raylib.h"
+#define MAIN_XHITBOX 46
+#define MAIN_YHITBOX 48
+const float playerXhitbox_DEBUG = 200.0f;
+const float playerYhitbox_DEBUG = 200.0f;
 
 bool collisionpixel(Image *map, float x, float y);
 
 void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 {
-
     p->texture = LoadTexture(texturePath);
     p->speed = 1.7f;
 
-    p->position.x = (float)GetScreenWidth() / 2.0f - (float)p->texture.width / 2.0f;
-    p->position.y = (float)GetScreenHeight() / 2.0f - (float)p->texture.height / 2.0f;
+    p->position = startPos;
+    
+    p->Xhitbox = MAIN_XHITBOX;  
+    p->Yhitbox = MAIN_YHITBOX;  
 
-    p->width = 200.0f;  
-    p->height = 200.0f;  
+    p->rectangleHitbox = (Rectangle){p->position.x, p->position.y, p->Xhitbox, p->Yhitbox};
 
     TraceLog(LOG_INFO, "PLAYER: Heroi inicializado.");
 }
 
-// Certifique-se de que playerWidth e playerHeight estão definidos ou são 32 e 32.
-const float playerWidth = 32.0f;
-const float playerHeight = 32.0f;
 
 void UpdatePlayer(Player *p, Scene *scene)
 {
@@ -38,11 +39,11 @@ void UpdatePlayer(Player *p, Scene *scene)
     else if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
         newY -= p->speed;
 
-    // --- Colisão Horizontal ---
+    //🔨 --- Colisão Horizontal ---
 
     // 1. Ponto de Colisão na TELA (Base central do personagem)
-    float screenCollisionX = newX + playerWidth / 2.0f;
-    float screenCollisionY = p->position.y + playerHeight;
+    float screenCollisionX = newX + p->Xhitbox / 2.0f;
+    float screenCollisionY = p->position.y + p->Yhitbox;
 
     // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
     float imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
@@ -54,11 +55,11 @@ void UpdatePlayer(Player *p, Scene *scene)
         p->position.x = newX;
     }
 
-    // --- Colisão Vertical ---
+    //🔨 --- Colisão Vertical ---
 
     // 1. Ponto de Colisão na TELA (Base central do personagem, nova Y)
-    screenCollisionX = p->position.x + playerWidth / 2.0f; // X atual
-    screenCollisionY = newY + playerHeight;                // Novo Y
+    screenCollisionX = p->position.x + p->Xhitbox / 2.0f; // X atual
+    screenCollisionY = newY + p->Yhitbox;                // Novo Y
 
     // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
     imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
@@ -74,15 +75,12 @@ void UpdatePlayer(Player *p, Scene *scene)
 void drawPlayer(Player *p)
 {
     DrawTextureV(p->texture, p->position, WHITE);
-    // --- ADICIONE ESTE CÓDIGO DE DEBUG ---
-    const float playerHeight = 32.0f; // Assumindo 32
-    const float playerWidth = 32.0f;  // Assumindo 32
+    
+    //🔨 Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
+    float debugX = p->position.x + p->Xhitbox / 2.0f;
+    float debugY = p->position.y + p->Yhitbox / 2.0f;
 
-    // Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
-    float debugX = p->position.x + playerWidth / 2.0f;
-    float debugY = p->position.y + playerHeight;
-
-    // Desenha um pequeno círculo vermelho no ponto exato de colisão
+    //🔨 Desenha um pequeno círculo vermelho no ponto exato de colisão
     DrawCircle((int)debugX, (int)debugY, 3, RED);
 }
 

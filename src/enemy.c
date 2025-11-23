@@ -1,15 +1,18 @@
 #include "enemy.h"
 #include "raylib.h"
 #include "player.h"
+#define MAIN_XHITBOX 32
+#define MAIN_YHITBOX 27
 
 // Inicializa um inimigo com vários assets diferentes para animação, velocidade e posição inicial
 void InitEnemy(Enemy* enemy, Vector2 startPos, float speed, const char* firstFramePath) {
     
+    // Largura e altura definidos na constante do cabeçalho da classe
     enemy->position = startPos;
     enemy->velocity = (Vector2){0, 0};
     enemy->speed = speed;
-    enemy->width = 6;
-    enemy->height =6;
+    enemy->Xhitbox = MAIN_XHITBOX; 
+    enemy->Yhitbox = MAIN_YHITBOX;
     enemy->waypointCount = 0;
     enemy->currentWaypoint = 0;
     enemy->movingForward = true;
@@ -81,9 +84,11 @@ void UpdateEnemy(Enemy* enemy, float deltaTime) {
     Rectangle newRect = {
         newPosition.x,
         newPosition.y,
-        enemy->width,
-        enemy->height
+        enemy->Xhitbox,
+        enemy->Yhitbox
     };
+
+    DrawRectangleLinesEx(newRect, 10, GREEN);
     
     // 📢 OS COMENTARIO SÃO PARA REMOVER AS COLISÕES DO COLLISIONMAP
     // Se não colidir, move
@@ -123,17 +128,20 @@ void DrawEnemy(Enemy* enemy, bool debug) {
     // Desenha o inimigo
     DrawTextureV(enemy->texture, enemy->position, enemy->color);
     
-    // Desenha borda
-    DrawRectangleLinesEx(
-        (Rectangle){enemy->position.x, enemy->position.y, enemy->width, enemy->height},
-        2, DARKGRAY
-    );
+    // 🔨Desenha borda (Hitbox de debug)
+    Rectangle hitbox = {
+        enemy->position.x,
+        enemy->position.y,
+        enemy->Xhitbox,
+        enemy->Yhitbox
+    };
+    DrawRectangleLinesEx(hitbox, 2, RED);
     
-    // Debug: desenha rota de patrulha
+    // 🔨 Debug: desenha rota de patrulha
     if (debug && enemy->waypointCount > 0) {
         Vector2 target = enemy->waypoints[enemy->currentWaypoint];
         DrawLineEx(
-            (Vector2){enemy->position.x + enemy->width/2, enemy->position.y + enemy->height/2},
+            (Vector2){enemy->position.x + enemy->Xhitbox/2, enemy->position.y + enemy->Yhitbox/2},
             target,
             2, YELLOW
         );
@@ -156,19 +164,21 @@ void DrawEnemy(Enemy* enemy, bool debug) {
 bool CheckPlayerEnemyCollision(Player* player, Enemy* enemy) {
     if (!enemy->active) return false;
     
+    // Envolve as posições e tamanhos dos elementos (hitbox != sprite)
     Rectangle playerRect = {
         player->position.x,
         player->position.y,
-        player->width,
-        player->height
+        player->Xhitbox,
+        player->Yhitbox
     };
     
     Rectangle enemyRect = {
         enemy->position.x,
         enemy->position.y,
-        enemy->width,
-        enemy->height
+        enemy->Xhitbox,
+        enemy->Yhitbox
     };
+
     
     return CheckCollisionRecs(playerRect, enemyRect);
 }

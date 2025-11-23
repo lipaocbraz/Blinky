@@ -16,7 +16,7 @@
 // --- Configurações Iniciais ---
 // Usamos a resolução do monitor (como você fez na sua main original)
 const int MONITOR_ID = 0;
-int cliques = 0;
+int cliques = 1;
 
 int main(void)
 {
