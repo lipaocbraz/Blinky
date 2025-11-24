@@ -56,17 +56,17 @@ int main(void)
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
 
-                //Inimigos[1]
+                // Inimigos[1]
                 InitEnemy(&enemy1, (Vector2){235.0f, 431.0f}, 100.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy1, (Vector2){507.0f, 569.0f});
-                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});                
+                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});
                 AddWaypoint(&enemy1, (Vector2){710.0f, 743.0f});
                 AddWaypoint(&enemy1, (Vector2){1115.0f, 891.0f});
                 AddWaypoint(&enemy1, (Vector2){1463.0f, 656.0f});
                 AddWaypoint(&enemy1, (Vector2){1634.0f, 669.0f});
 
-                //Inimigos[2]
-                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg"); 
+                // Inimigos[2]
+                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy2, (Vector2){1372.0f, 320.0f});
                 AddWaypoint(&enemy2, (Vector2){1250.0f, 421.0f});
                 AddWaypoint(&enemy2, (Vector2){1141.0f, 474.0f});
@@ -75,14 +75,14 @@ int main(void)
                 AddWaypoint(&enemy2, (Vector2){973.0f, 401.0f});
                 AddWaypoint(&enemy2, (Vector2){1021.0f, 304.0f});
 
-                //Inimigos[3]
-                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg"); 
+                // Inimigos[3]
+                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy3, (Vector2){918.0f, 313.0f});
                 AddWaypoint(&enemy3, (Vector2){758.0f, 405.0f});
                 AddWaypoint(&enemy3, (Vector2){630.0f, 535.0f});
                 AddWaypoint(&enemy3, (Vector2){583.0f, 611.0f});
 
-                //Inimigos[4]
+                // Inimigos[4]
                 InitEnemy(&enemy4, (Vector2){1200.0f, 800.0f}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy4, (Vector2){633.0f, 589.0f});
                 AddWaypoint(&enemy4, (Vector2){664.0f, 658.0f});
