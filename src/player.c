@@ -70,6 +70,9 @@ void UpdatePlayer(Player *p, Scene *scene)
     {
         p->position.y = newY;
     }
+
+    // Atualiza a hitbox do jogador
+    p->rectangleHitbox = (Rectangle){p->position.x, p->position.y, p->Xhitbox, p->Yhitbox};
 }
 
 void drawPlayer(Player *p)
