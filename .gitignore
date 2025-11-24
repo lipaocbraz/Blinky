@@ -6,3 +6,4 @@ build.bat
 mapper.c
 mapper.exe
 libraylib.dll
+blinky.exe
