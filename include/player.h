@@ -12,6 +12,7 @@ typedef struct Player
 
     float Xhitbox;   // Largura da hitbox
     float Yhitbox;  // Altura da hitbox
+    int keysCollected; // Número de chaves coletadas
 
     Rectangle rectangleHitbox; // Hitbox do jogador
 } Player;

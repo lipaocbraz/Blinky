@@ -1,0 +1,8 @@
+#gitignore
+.vscode/tasks.json
+.vscode/c_cpp_properties.json
+glfw3.dll
+build.bat
+mapper.c
+mapper.exe
+libraylib.dll

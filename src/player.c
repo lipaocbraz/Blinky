@@ -13,6 +13,7 @@ void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
     p->speed = 1.7f;
 
     p->position = startPos;
+    p->keysCollected = 0;
     
     p->Xhitbox = MAIN_XHITBOX;  
     p->Yhitbox = MAIN_YHITBOX;  

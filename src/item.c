@@ -24,7 +24,7 @@ void DrawItem(Item* item)
     }
 }
 
-bool CheckItemCollision(Item* item, Rectangle playerRect)
+bool CheckItemCollision(Item* item, Rectangle playerRect, Player* player)
 {
     if (item->collected)
         return false;
@@ -41,6 +41,7 @@ bool CheckItemCollision(Item* item, Rectangle playerRect)
         item->collected = true;
         TraceLog(LOG_INFO, "ITEM: Item coletado em (X: %.0f, Y: %.0f).", item->position.x, item->position.y);
         item->collected = true;
+        player->keysCollected += 1;
         return true;
     }
 

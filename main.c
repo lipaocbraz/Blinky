@@ -24,7 +24,8 @@ int main(void)
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
     Scene map1;
-    int cliques=1;
+    int cliques=1, coletas=1;
+
     
     //Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
@@ -34,7 +35,9 @@ int main(void)
     Enemy enemy3;
     Enemy enemy4;
 
-    Item keyItem;
+    Item keyItem1;
+    Item keyItem2;
+    Item keyItem3;
     enemy2.color = PURPLE;
     
     bool showDebug = true;
@@ -88,7 +91,9 @@ int main(void)
                 AddWaypoint(&enemy4, (Vector2){789.0f, 652.0f});
 
                 //Item (chave)
-                InitItem(&keyItem, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});   
+                InitItem(&keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});  
+                InitItem(&keyItem2, "assets/keyItem.png", (Vector2){955.0f, 215.0f});
+                InitItem(&keyItem3, "assets/keyItem.png", (Vector2){1045.0f, 782.0f}); 
 
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
             }
@@ -103,7 +108,7 @@ int main(void)
 
             //🔨 Captura de clique do mouse para mapeamento de pixels!!
             Vector2 screenMouse = GetMousePosition();
-
+ 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 TraceLog(LOG_INFO, "%i. Coordenadas do Mapa: X: %.0f, Y: %.0f",cliques, screenMouse.x, screenMouse.y);
@@ -111,8 +116,14 @@ int main(void)
             }
 
             // Verifica colisão do jogador com o item (chave)
-            if(CheckItemCollision(&keyItem, hero.rectangleHitbox)) {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou a chave!");
+            if(CheckItemCollision(&keyItem1, hero.rectangleHitbox, &hero)) {
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
+            }
+            if(CheckItemCollision(&keyItem2, hero.rectangleHitbox, &hero)) {
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
+            }
+            if(CheckItemCollision(&keyItem3, hero.rectangleHitbox, &hero)) {
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
             }
 
             // Colisões com inimigos
@@ -184,7 +195,9 @@ int main(void)
                 DrawEnemy(&enemy2, showDebug);
                 DrawEnemy(&enemy3, showDebug);
                 DrawEnemy(&enemy4, showDebug);  
-                DrawItem(&keyItem);
+                DrawItem(&keyItem1);
+                DrawItem(&keyItem2);
+                DrawItem(&keyItem3);
             }
             break;
 
@@ -217,6 +230,10 @@ int main(void)
         UnloadScene(&map1);
         unloadPlayer(&hero);
     }
+
+    double score = GetTime();
+    //Adicionar escrita em arquivo de score aqui
+
     CloseWindow();
     return 0;
 }

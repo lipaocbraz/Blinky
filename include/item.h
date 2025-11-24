@@ -19,6 +19,6 @@ void InitItem(Item* item, const char* texturePath, Vector2 position);
 void DrawItem(Item* item);
 
 // Verifica colisão entre o item e o jogador
-bool CheckItemCollision(Item* item, Rectangle playerRect);
+bool CheckItemCollision(Item* item, Rectangle playerRect, Player *player);
 
 #endif
