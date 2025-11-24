@@ -3,13 +3,12 @@
 #include "game.h"
 #include "player.h"
 #include "enemy.h"
-#include "item.h"   
+#include "item.h"
 #include <math.h> // Para fminf
 
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
 // gcc main.c src/*.c -I include -o blinky.exe -lraylib -lopengl32 -lgdi32 -lwinmm
 // MARGEM DE ERRO DA FUNÇÃO DE MAPEAMENTO DE PIXELS: X=~-36px, Y=~-36px (monitor 24 polegadas)
-
 
 int main(void)
 {
@@ -24,12 +23,11 @@ int main(void)
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
     Scene map1;
-    int cliques=1, coletas=1;
+    int cliques = 1, coletas = 1;
 
-    
-    //Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
+    // Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
-    
+
     Enemy enemy1;
     Enemy enemy2;
     Enemy enemy3;
@@ -39,7 +37,7 @@ int main(void)
     Item keyItem2;
     Item keyItem3;
     enemy2.color = PURPLE;
-    
+
     bool showDebug = true;
 
     while (!WindowShouldClose())
@@ -49,26 +47,26 @@ int main(void)
 
         case TITLE:
         {
-            
+
             if (IsKeyPressed(KEY_ENTER))
             {
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
-                initPlayer(&hero, "assets/player.png", (Vector2){1500.0f, 168.0f});
-                
+                initPlayer(&hero, "assets/player.png", (Vector2){500.0f, 500.0f});
+
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
 
-                //Inimigos[1]
+                // Inimigos[1]
                 InitEnemy(&enemy1, (Vector2){235.0f, 431.0f}, 100.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy1, (Vector2){507.0f, 569.0f});
-                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});                
+                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});
                 AddWaypoint(&enemy1, (Vector2){710.0f, 743.0f});
                 AddWaypoint(&enemy1, (Vector2){1115.0f, 891.0f});
                 AddWaypoint(&enemy1, (Vector2){1463.0f, 656.0f});
                 AddWaypoint(&enemy1, (Vector2){1634.0f, 669.0f});
 
-                //Inimigos[2]
-                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg"); 
+                // Inimigos[2]
+                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy2, (Vector2){1372.0f, 320.0f});
                 AddWaypoint(&enemy2, (Vector2){1250.0f, 421.0f});
                 AddWaypoint(&enemy2, (Vector2){1141.0f, 474.0f});
@@ -77,23 +75,23 @@ int main(void)
                 AddWaypoint(&enemy2, (Vector2){973.0f, 401.0f});
                 AddWaypoint(&enemy2, (Vector2){1021.0f, 304.0f});
 
-                //Inimigos[3]
-                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg"); 
+                // Inimigos[3]
+                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy3, (Vector2){918.0f, 313.0f});
                 AddWaypoint(&enemy3, (Vector2){758.0f, 405.0f});
                 AddWaypoint(&enemy3, (Vector2){630.0f, 535.0f});
                 AddWaypoint(&enemy3, (Vector2){583.0f, 611.0f});
 
-                //Inimigos[4]
+                // Inimigos[4]
                 InitEnemy(&enemy4, (Vector2){1200.0f, 800.0f}, 80.0f, "assets/ghost.jpg");
                 AddWaypoint(&enemy4, (Vector2){633.0f, 589.0f});
                 AddWaypoint(&enemy4, (Vector2){664.0f, 658.0f});
                 AddWaypoint(&enemy4, (Vector2){789.0f, 652.0f});
 
-                //Item (chave)
-                InitItem(&keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});  
+                // Item (chave)
+                InitItem(&keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});
                 InitItem(&keyItem2, "assets/keyItem.png", (Vector2){955.0f, 215.0f});
-                InitItem(&keyItem3, "assets/keyItem.png", (Vector2){1045.0f, 782.0f}); 
+                InitItem(&keyItem3, "assets/keyItem.png", (Vector2){1045.0f, 782.0f});
 
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
             }
@@ -106,45 +104,52 @@ int main(void)
             UpdateEnemy(&enemy3, GetFrameTime());
             UpdateEnemy(&enemy4, GetFrameTime());
 
-            //🔨 Captura de clique do mouse para mapeamento de pixels!!
+            // 🔨 Captura de clique do mouse para mapeamento de pixels!!
             Vector2 screenMouse = GetMousePosition();
- 
+
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
-                TraceLog(LOG_INFO, "%i. Coordenadas do Mapa: X: %.0f, Y: %.0f",cliques, screenMouse.x, screenMouse.y);
+                TraceLog(LOG_INFO, "%i. Coordenadas do Mapa: X: %.0f, Y: %.0f", cliques, screenMouse.x, screenMouse.y);
                 cliques++;
             }
 
             // Verifica colisão do jogador com o item (chave)
-            if(CheckItemCollision(&keyItem1, hero.rectangleHitbox, &hero)) {
+            if (CheckItemCollision(&keyItem1, hero.rectangleHitbox, &hero))
+            {
                 TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
             }
-            if(CheckItemCollision(&keyItem2, hero.rectangleHitbox, &hero)) {
+            if (CheckItemCollision(&keyItem2, hero.rectangleHitbox, &hero))
+            {
                 TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
             }
-            if(CheckItemCollision(&keyItem3, hero.rectangleHitbox, &hero)) {
+            if (CheckItemCollision(&keyItem3, hero.rectangleHitbox, &hero))
+            {
                 TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
             }
 
             // Colisões com inimigos
-            if(CheckPlayerEnemyCollision(&hero, &enemy1)) {
+            if (CheckPlayerEnemyCollision(&hero, &enemy1))
+            {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = ENDING;
             }
-            else if(CheckPlayerEnemyCollision(&hero, &enemy2)) {
+            else if (CheckPlayerEnemyCollision(&hero, &enemy2))
+            {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = ENDING;
             }
-            else if(CheckPlayerEnemyCollision(&hero, &enemy3)) {
+            else if (CheckPlayerEnemyCollision(&hero, &enemy3))
+            {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = ENDING;
             }
-            else if(CheckPlayerEnemyCollision(&hero, &enemy4)) {
+            else if (CheckPlayerEnemyCollision(&hero, &enemy4))
+            {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = ENDING;
             }
         }
-        
+
         case ENDING:
         {
             if (IsKeyPressed(KEY_P))
@@ -153,11 +158,10 @@ int main(void)
             }
         }
 
-
             BeginDrawing();
             ClearBackground(BLACK);
 
-            // Aqui temos a renderização de cada tela do jogo de fato 
+            // Aqui temos a renderização de cada tela do jogo de fato
             switch (currentScreen)
             {
             case TITLE:
@@ -194,7 +198,7 @@ int main(void)
                 DrawEnemy(&enemy1, showDebug);
                 DrawEnemy(&enemy2, showDebug);
                 DrawEnemy(&enemy3, showDebug);
-                DrawEnemy(&enemy4, showDebug);  
+                DrawEnemy(&enemy4, showDebug);
                 DrawItem(&keyItem1);
                 DrawItem(&keyItem2);
                 DrawItem(&keyItem3);
@@ -232,7 +236,7 @@ int main(void)
     }
 
     double score = GetTime();
-    //Adicionar escrita em arquivo de score aqui
+    // Adicionar escrita em arquivo de score aqui
 
     CloseWindow();
     return 0;
