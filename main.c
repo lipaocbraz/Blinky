@@ -23,7 +23,7 @@ int main(void)
     GameScreen currentScreen = TITLE;
     SetTargetFPS(60);
     Scene map1;
-    int cliques = 1, coletas = 1;
+    int cliques = 1;
 
     // Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
@@ -36,6 +36,9 @@ int main(void)
     Item keyItem1;
     Item keyItem2;
     Item keyItem3;
+    Item exit;
+
+    exit.isDoor = true;
     enemy2.color = PURPLE;
 
     bool showDebug = true;
@@ -52,6 +55,7 @@ int main(void)
             {
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
+                InitItem(&exit, "assets/exitRotation.png", (Vector2){1070.0f, 964.0f});
                 initPlayer(&hero, "assets/player.png", (Vector2){1573.0f, 189.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
@@ -123,15 +127,23 @@ int main(void)
             // Verifica colisão do jogador com o item (chave)
             if (CheckItemCollision(&keyItem1, hero.rectangleHitbox, &hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
             }
             if (CheckItemCollision(&keyItem2, hero.rectangleHitbox, &hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
             }
             if (CheckItemCollision(&keyItem3, hero.rectangleHitbox, &hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", coletas);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
+            }
+
+            if(hero.keysCollected >= 3) {
+                if (CheckItemCollision(&exit, hero.rectangleHitbox, &hero))
+                {
+                    TraceLog(LOG_INFO, "JOGO: Jogador coletou a saída e venceu o jogo!");
+                    currentScreen = ENDING;
+                }
             }
 
             // Colisões com inimigos
@@ -209,6 +221,11 @@ int main(void)
                 DrawItem(&keyItem1);
                 DrawItem(&keyItem2);
                 DrawItem(&keyItem3);
+                
+                if(hero.keysCollected >= 3) {
+                    DrawItem(&exit);
+                    TraceLog(LOG_INFO, "Porta a mostra!!");
+                }
             }
             break;
 

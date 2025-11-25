@@ -10,6 +10,10 @@ typedef struct {
     float Xhitbox;
     float Yhitbox;
     bool collected;
+    bool isDoor;
+
+    Rectangle hitbox;
+    Color color;
 } Item;
 
 // Inicializa um item
