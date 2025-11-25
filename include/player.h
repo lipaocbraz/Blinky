@@ -2,7 +2,7 @@
 #define PLAYER_H
 #include <raylib.h>
 #include "scene.h"
-#include "enemy.h" 
+#include "enemy.h"
 
 typedef struct Player
 {
@@ -10,14 +10,14 @@ typedef struct Player
     Vector2 position;
     float speed;
 
-    float Xhitbox;   // Largura da hitbox
-    float Yhitbox;  // Altura da hitbox
+    float Xhitbox;     // Largura da hitbox
+    float Yhitbox;     // Altura da hitbox
     int keysCollected; // Número de chaves coletadas
 
     Rectangle rectangleHitbox; // Hitbox do jogador
 } Player;
 
-bool CheckPlayerEnemyCollision(Player* player, Enemy* enemy);
+bool CheckPlayerEnemyCollision(Player *player, Enemy *enemy);
 void initPlayer(Player *p, const char *texturePath, Vector2 startPos);
 void UpdatePlayer(Player *p, Scene *scene);
 void drawPlayer(Player *p);

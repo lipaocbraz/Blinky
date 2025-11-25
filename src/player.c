@@ -12,15 +12,14 @@ void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 
     p->position = startPos;
     p->keysCollected = 0;
-    
-    p->Xhitbox = MAIN_XHITBOX;  
-    p->Yhitbox = MAIN_YHITBOX;  
+
+    p->Xhitbox = MAIN_XHITBOX;
+    p->Yhitbox = MAIN_YHITBOX;
 
     p->rectangleHitbox = (Rectangle){p->position.x, p->position.y, p->Xhitbox, p->Yhitbox};
 
     TraceLog(LOG_INFO, "PLAYER: Heroi inicializado.");
 }
-
 
 void UpdatePlayer(Player *p, Scene *scene)
 {
@@ -38,29 +37,31 @@ void UpdatePlayer(Player *p, Scene *scene)
     else if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
         newY -= p->speed;
 
-    if(CheckSceneCollision(scene, (Vector2){newX, newY})) {
+    if (!CheckSceneCollision(scene, (Vector2){newX, newY}))
+    {
         p->position = p->position;
         TraceLog(LOG_INFO, "PLAYER: Colisão detectada. Movimento bloqueado.");
         return;
     }
-    p->position.x = newX;
-    p->position.y = newY;
+    else
+    {
+        p->position.x = newX;
+        p->position.y = newY;
+    }
 
     p->rectangleHitbox = (Rectangle){p->position.x, p->position.y, p->Xhitbox, p->Yhitbox};
 }
-
 void drawPlayer(Player *p)
 {
     DrawTextureV(p->texture, p->position, WHITE);
-    
-    //🔨 Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
+
+    // 🔨 Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
     float debugX = p->position.x + p->Xhitbox / 2.0f;
     float debugY = p->position.y + p->Yhitbox / 2.0f;
 
-    //🔨 Desenha um pequeno círculo vermelho no ponto exato de colisão
+    // 🔨 Desenha um pequeno círculo vermelho no ponto exato de colisão
     DrawCircle((int)debugX, (int)debugY, 3, RED);
 }
-
 
 void unloadPlayer(Player *p)
 {

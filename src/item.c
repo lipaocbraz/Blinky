@@ -5,7 +5,7 @@
 #define ITEM_YHITBOX 100
 #define ITEM_COLOR_DEFAULT WHITE
 
-void InitItem(Item* item, const char* texturePath, Vector2 position)
+void InitItem(Item *item, const char *texturePath, Vector2 position)
 {
     item->texture = LoadTexture(texturePath);
     item->position = position;
@@ -14,14 +14,14 @@ void InitItem(Item* item, const char* texturePath, Vector2 position)
     item->collected = false;
     item->isDoor = false;
 
-    //Personalizável caso queira colocar a borda de outra cor
+    // Personalizável caso queira colocar a borda de outra cor
     item->color = ITEM_COLOR_DEFAULT;
     item->hitbox = (Rectangle){item->position.x, item->position.y, item->Xhitbox, item->Yhitbox};
 
     TraceLog(LOG_INFO, "ITEM: Item inicializado em (X: %.0f, Y: %.0f).", position.x, position.y);
 }
 
-void DrawItem(Item* item)
+void DrawItem(Item *item)
 {
     if (!item->collected)
     {
@@ -32,7 +32,7 @@ void DrawItem(Item* item)
     }
 }
 
-bool CheckItemCollision(Item* item, Rectangle playerRect, Player* player)
+bool CheckItemCollision(Item *item, Rectangle playerRect, Player *player)
 {
     if (item->collected)
         return false;
@@ -41,8 +41,7 @@ bool CheckItemCollision(Item* item, Rectangle playerRect, Player* player)
         item->position.x,
         item->position.y,
         item->Xhitbox,
-        item->Yhitbox
-    };
+        item->Yhitbox};
 
     if (CheckCollisionRecs(playerRect, itemRect))
     {
