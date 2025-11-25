@@ -44,7 +44,7 @@ void DrawScene(Scene *scene)
 
     CalculateMap(scene);
     Color color_tarja = BLACK;
-    
+
     // 1. Obtém as dimensões atuais da tela (dinâmicas)
     float screenWidth = (float)GetScreenWidth();
     float screenHeight = (float)GetScreenHeight();
@@ -86,16 +86,16 @@ void DrawScene(Scene *scene)
     DrawTexturePro(scene->map, sourceRec, destRec, (Vector2){0, 0}, 0.0f, WHITE);
 }
 
-//Define a posição do jogador no mapa de colisão a partir do mapa base
+// Define a posição do jogador no mapa de colisão a partir do mapa base
 Vector2 ScreenToMapPosition(Scene *scene, Vector2 screenPos)
 {
     // Remove o offset (margem de erro) de centralização
     float mapX = screenPos.x - scene->offsetMap.x;
     float mapY = screenPos.y - scene->offsetMap.y;
-    
+
     mapX /= scene->mapScale;
     mapY /= scene->mapScale;
-    
+
     return (Vector2){mapX, mapY};
 }
 
@@ -103,22 +103,21 @@ Vector2 ScreenToMapPosition(Scene *scene, Vector2 screenPos)
 bool CheckSceneCollision(Scene *scene, Vector2 screenPos)
 {
     Vector2 mapPos = ScreenToMapPosition(scene, screenPos);
-    
+
     int pixelEntityPosX = (int)mapPos.x;
     int pixelEntityPosY = (int)mapPos.y;
-    
+
     // Verifica se está fora dos limites do mapa
-    if (pixelEntityPosX < 0 || pixelEntityPosX >= scene->collision_image.width || 
+    if (pixelEntityPosX < 0 || pixelEntityPosX >= scene->collision_image.width ||
         pixelEntityPosY < 0 || pixelEntityPosY >= scene->collision_image.height)
         return true; // Fora do mapa = colisão
-    
+
     // Pega a cor do pixel (como a imagem é 1D, converte as coordenadas 2D para 1D, pois cada pixel é um elemento do array)
     Color pixel = scene->collision_pixels[pixelEntityPosY * scene->collision_image.width + pixelEntityPosX];
-    
+
     // Se for preto (rgb=0)
     return (pixel.r == 0 && pixel.g == 0 && pixel.b == 0);
 }
-
 
 void UnloadScene(Scene *scene)
 {

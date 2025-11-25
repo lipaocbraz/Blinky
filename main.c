@@ -5,6 +5,11 @@
 #include "enemy.h"
 #include "item.h"
 #include <math.h> // Para fminf
+#include <time.h>
+#include <float.h>
+#include <score.h>
+#include <string.h>
+#include <stdio.h>
 
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
 // gcc main.c src/*.c -I include -o blinky.exe -lraylib -lopengl32 -lgdi32 -lwinmm
@@ -24,6 +29,12 @@ int main(void)
     SetTargetFPS(60);
     Scene map1;
     int cliques = 1;
+
+    clock_t inicio = 0;
+    clock_t fim = 0;
+    double segundos = 0.0;
+    bool time_measured = false; // Flag para garantir que o tempo só seja medido uma vez
+    // -------------------------------
 
     // Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
@@ -56,43 +67,44 @@ int main(void)
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
                 InitItem(&exit, "assets/exitRotation.png", (Vector2){1070.0f, 964.0f});
-                initPlayer(&hero, "assets/player.png", (Vector2){1573.0f, 189.0f});
+                initPlayer(&hero, "assets/player.png", (Vector2){573.0f, 500.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
+                inicio = clock();
 
                 // Inimigo[1]
-                InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy1, (Vector2){422.0f, 633.0f}); 
-                AddWaypoint(&enemy1, (Vector2){628.0f, 772.0f}); 
-                AddWaypoint(&enemy1, (Vector2){864.0f, 858.0f}); 
-                AddWaypoint(&enemy1, (Vector2){1125.0f, 914.0f}); 
-                AddWaypoint(&enemy1, (Vector2){1295.0f, 849.0f}); 
-                AddWaypoint(&enemy1, (Vector2){1509.0f, 691.0f}); 
-                AddWaypoint(&enemy1, (Vector2){1633.0f, 660.0f}); 
+                InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg");
+                AddWaypoint(&enemy1, (Vector2){422.0f, 633.0f});
+                AddWaypoint(&enemy1, (Vector2){628.0f, 772.0f});
+                AddWaypoint(&enemy1, (Vector2){864.0f, 858.0f});
+                AddWaypoint(&enemy1, (Vector2){1125.0f, 914.0f});
+                AddWaypoint(&enemy1, (Vector2){1295.0f, 849.0f});
+                AddWaypoint(&enemy1, (Vector2){1509.0f, 691.0f});
+                AddWaypoint(&enemy1, (Vector2){1633.0f, 660.0f});
 
                 // Inimigo[2]
-                InitEnemy(&enemy2, (Vector2){1370.0f, 310.0f}, 80.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy2, (Vector2){1255.0f, 397.0f}); 
-                AddWaypoint(&enemy2, (Vector2){1147.0f, 448.0f}); 
-                AddWaypoint(&enemy2, (Vector2){1331.0f, 522.0f}); 
-                AddWaypoint(&enemy2, (Vector2){1211.0f, 451.0f}); 
-                AddWaypoint(&enemy2, (Vector2){1077.0f, 412.0f}); 
-                AddWaypoint(&enemy2, (Vector2){953.0f, 352.0f}); 
-                AddWaypoint(&enemy2, (Vector2){959.0f, 211.0f}); 
+                InitEnemy(&enemy2, (Vector2){1370.0f, 310.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&enemy2, (Vector2){1255.0f, 397.0f});
+                AddWaypoint(&enemy2, (Vector2){1147.0f, 448.0f});
+                AddWaypoint(&enemy2, (Vector2){1331.0f, 522.0f});
+                AddWaypoint(&enemy2, (Vector2){1211.0f, 451.0f});
+                AddWaypoint(&enemy2, (Vector2){1077.0f, 412.0f});
+                AddWaypoint(&enemy2, (Vector2){953.0f, 352.0f});
+                AddWaypoint(&enemy2, (Vector2){959.0f, 211.0f});
 
                 // Inimigo[3]
-                InitEnemy(&enemy3, (Vector2){916.0f, 298.0f}, 80.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy3, (Vector2){761.0f, 391.0f}); 
-                AddWaypoint(&enemy3, (Vector2){673.0f, 461.0f}); 
-                AddWaypoint(&enemy3, (Vector2){608.0f, 389.0f}); 
-                AddWaypoint(&enemy3, (Vector2){608.0f, 482.0f}); 
-                AddWaypoint(&enemy3, (Vector2){503.0f, 566.0f}); 
-                AddWaypoint(&enemy3, (Vector2){419.0f, 654.0f}); 
-                AddWaypoint(&enemy3, (Vector2){534.0f, 722.0f}); 
+                InitEnemy(&enemy3, (Vector2){916.0f, 298.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&enemy3, (Vector2){761.0f, 391.0f});
+                AddWaypoint(&enemy3, (Vector2){673.0f, 461.0f});
+                AddWaypoint(&enemy3, (Vector2){608.0f, 389.0f});
+                AddWaypoint(&enemy3, (Vector2){608.0f, 482.0f});
+                AddWaypoint(&enemy3, (Vector2){503.0f, 566.0f});
+                AddWaypoint(&enemy3, (Vector2){419.0f, 654.0f});
+                AddWaypoint(&enemy3, (Vector2){534.0f, 722.0f});
 
                 // Inimigo[4]
-                InitEnemy(&enemy4, (Vector2){1516.0f, 692.0f}, 80.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy4, (Vector2){1419.0f, 596.0f}); 
+                InitEnemy(&enemy4, (Vector2){1516.0f, 692.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&enemy4, (Vector2){1419.0f, 596.0f});
                 AddWaypoint(&enemy4, (Vector2){1300.0f, 487.0f});
                 AddWaypoint(&enemy4, (Vector2){1559.0f, 682.0f});
                 AddWaypoint(&enemy4, (Vector2){1749.0f, 685.0f});
@@ -138,7 +150,8 @@ int main(void)
                 TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
             }
 
-            if(hero.keysCollected >= 3) {
+            if (hero.keysCollected >= 3)
+            {
                 if (CheckItemCollision(&exit, hero.rectangleHitbox, &hero))
                 {
                     TraceLog(LOG_INFO, "JOGO: Jogador coletou a saída e venceu o jogo!");
@@ -171,6 +184,9 @@ int main(void)
 
         case ENDING:
         {
+            fim = clock();
+            segundos = (double)(fim - inicio) / CLOCKS_PER_SEC;
+            time_measured = true;
             if (IsKeyPressed(KEY_P))
             {
                 UnloadScene(&map1);
@@ -221,8 +237,9 @@ int main(void)
                 DrawItem(&keyItem1);
                 DrawItem(&keyItem2);
                 DrawItem(&keyItem3);
-                
-                if(hero.keysCollected >= 3) {
+
+                if (hero.keysCollected >= 3)
+                {
                     DrawItem(&exit);
                     TraceLog(LOG_INFO, "Porta a mostra!!");
                 }
@@ -236,6 +253,21 @@ int main(void)
 
                 const char *titulo = "GAME OVER";
                 int fontSizeTitulo = 40;
+
+                // --- EXIBIÇÃO DO SCORE ---
+                char scoreText[64];
+                snprintf(scoreText, 64, "Seu tempo: %.3f segundos", segundos);
+
+                double recorde = LoadTopScore();
+                char recordeText[64];
+                if (recorde < DBL_MAX)
+                {
+                    snprintf(recordeText, 64, "Recorde: %.3f segundos", recorde);
+                }
+                else
+                {
+                    strcpy(recordeText, "Recorde: N/A");
+                }
 
                 const char *instrucao = "APERTE 'DELETE' PARA SAIR";
                 int fontSizeInstrucao = 20;
