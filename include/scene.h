@@ -8,13 +8,15 @@ typedef struct Scene
     Image collision_image;
     float mapScale;
     Vector2 offsetMap;
+
+    Color *collision_pixels;
 } Scene;
 
-// Declaração de Funções da lib aqui
-void DrawScene(Scene *scene);
-void CalculateMap(Scene *scene);
 void InitScene(Scene *scene, const char *imagePath);
+void CalculateMap(Scene *scene);
+Vector2 ScreenToMapPosition(Scene *scene, Vector2 screenPos);
+bool CheckSceneCollision(Scene *scene, Vector2 screenPos);
+void DrawScene(Scene *scene);
 void UnloadScene(Scene *scene);
-// Fim de funções
 
 #endif

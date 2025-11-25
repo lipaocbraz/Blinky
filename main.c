@@ -52,41 +52,48 @@ int main(void)
             {
                 currentScreen = GAMEPLAY;
                 InitScene(&map1, "assets/Cenario_medieval.png");
-                initPlayer(&hero, "assets/player.png", (Vector2){500.0f, 500.0f});
+                initPlayer(&hero, "assets/player.png", (Vector2){1573.0f, 189.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
 
-                //Inimigos[1]
-                InitEnemy(&enemy1, (Vector2){235.0f, 431.0f}, 100.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy1, (Vector2){507.0f, 569.0f});
-                AddWaypoint(&enemy1, (Vector2){520.0f, 673.0f});                
-                AddWaypoint(&enemy1, (Vector2){710.0f, 743.0f});
-                AddWaypoint(&enemy1, (Vector2){1115.0f, 891.0f});
-                AddWaypoint(&enemy1, (Vector2){1463.0f, 656.0f});
-                AddWaypoint(&enemy1, (Vector2){1634.0f, 669.0f});
+                // Inimigo[1]
+                InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy1, (Vector2){422.0f, 633.0f}); 
+                AddWaypoint(&enemy1, (Vector2){628.0f, 772.0f}); 
+                AddWaypoint(&enemy1, (Vector2){864.0f, 858.0f}); 
+                AddWaypoint(&enemy1, (Vector2){1125.0f, 914.0f}); 
+                AddWaypoint(&enemy1, (Vector2){1295.0f, 849.0f}); 
+                AddWaypoint(&enemy1, (Vector2){1509.0f, 691.0f}); 
+                AddWaypoint(&enemy1, (Vector2){1633.0f, 660.0f}); 
 
-                //Inimigos[2]
-                InitEnemy(&enemy2, (Vector2){400, 200}, 80.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy2, (Vector2){1372.0f, 320.0f});
-                AddWaypoint(&enemy2, (Vector2){1250.0f, 421.0f});
-                AddWaypoint(&enemy2, (Vector2){1141.0f, 474.0f});
-                AddWaypoint(&enemy2, (Vector2){1301.0f, 571.0f});
-                AddWaypoint(&enemy2, (Vector2){1193.0f, 469.0f});
-                AddWaypoint(&enemy2, (Vector2){973.0f, 401.0f});
-                AddWaypoint(&enemy2, (Vector2){1021.0f, 304.0f});
+                // Inimigo[2]
+                InitEnemy(&enemy2, (Vector2){1370.0f, 310.0f}, 80.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy2, (Vector2){1255.0f, 397.0f}); 
+                AddWaypoint(&enemy2, (Vector2){1147.0f, 448.0f}); 
+                AddWaypoint(&enemy2, (Vector2){1331.0f, 522.0f}); 
+                AddWaypoint(&enemy2, (Vector2){1211.0f, 451.0f}); 
+                AddWaypoint(&enemy2, (Vector2){1077.0f, 412.0f}); 
+                AddWaypoint(&enemy2, (Vector2){953.0f, 352.0f}); 
+                AddWaypoint(&enemy2, (Vector2){959.0f, 211.0f}); 
 
-                //Inimigos[3]
-                InitEnemy(&enemy3, (Vector2){632.0f, 276.0f}, 80.0f, "assets/ghost.jpg"); 
-                AddWaypoint(&enemy3, (Vector2){918.0f, 313.0f});
-                AddWaypoint(&enemy3, (Vector2){758.0f, 405.0f});
-                AddWaypoint(&enemy3, (Vector2){630.0f, 535.0f});
-                AddWaypoint(&enemy3, (Vector2){583.0f, 611.0f});
+                // Inimigo[3]
+                InitEnemy(&enemy3, (Vector2){916.0f, 298.0f}, 80.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy3, (Vector2){761.0f, 391.0f}); 
+                AddWaypoint(&enemy3, (Vector2){673.0f, 461.0f}); 
+                AddWaypoint(&enemy3, (Vector2){608.0f, 389.0f}); 
+                AddWaypoint(&enemy3, (Vector2){608.0f, 482.0f}); 
+                AddWaypoint(&enemy3, (Vector2){503.0f, 566.0f}); 
+                AddWaypoint(&enemy3, (Vector2){419.0f, 654.0f}); 
+                AddWaypoint(&enemy3, (Vector2){534.0f, 722.0f}); 
 
-                //Inimigos[4]
-                InitEnemy(&enemy4, (Vector2){1200.0f, 800.0f}, 80.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy4, (Vector2){633.0f, 589.0f});
-                AddWaypoint(&enemy4, (Vector2){664.0f, 658.0f});
-                AddWaypoint(&enemy4, (Vector2){789.0f, 652.0f});
+                // Inimigo[4]
+                InitEnemy(&enemy4, (Vector2){1516.0f, 692.0f}, 80.0f, "assets/ghost.jpg"); 
+                AddWaypoint(&enemy4, (Vector2){1419.0f, 596.0f}); 
+                AddWaypoint(&enemy4, (Vector2){1300.0f, 487.0f});
+                AddWaypoint(&enemy4, (Vector2){1559.0f, 682.0f});
+                AddWaypoint(&enemy4, (Vector2){1749.0f, 685.0f});
+                AddWaypoint(&enemy4, (Vector2){1851.0f, 585.0f});
+                AddWaypoint(&enemy4, (Vector2){1863.0f, 498.0f});
 
                 // Item (chave)
                 InitItem(&keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});

@@ -5,8 +5,6 @@
 const float playerXhitbox_DEBUG = 200.0f;
 const float playerYhitbox_DEBUG = 200.0f;
 
-bool collisionpixel(Image *map, float x, float y);
-
 void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 {
     p->texture = LoadTexture(texturePath);
@@ -40,39 +38,14 @@ void UpdatePlayer(Player *p, Scene *scene)
     else if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
         newY -= p->speed;
 
-    //🔨 --- Colisão Horizontal ---
-
-    // 1. Ponto de Colisão na TELA (Base central do personagem)
-    float screenCollisionX = newX + p->Xhitbox / 2.0f;
-    float screenCollisionY = p->position.y + p->Yhitbox;
-
-    // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
-    float imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
-    float imageY = (screenCollisionY - scene->offsetMap.y) / scene->mapScale;
-
-    // Colisão Horizontal: Verifica o novo X com o Y convertido
-    if (!collisionpixel(&scene->collision_image, imageX, imageY))
-    {
-        p->position.x = newX;
+    if(CheckSceneCollision(scene, (Vector2){newX, newY})) {
+        p->position = p->position;
+        TraceLog(LOG_INFO, "PLAYER: Colisão detectada. Movimento bloqueado.");
+        return;
     }
+    p->position.x = newX;
+    p->position.y = newY;
 
-    //🔨 --- Colisão Vertical ---
-
-    // 1. Ponto de Colisão na TELA (Base central do personagem, nova Y)
-    screenCollisionX = p->position.x + p->Xhitbox / 2.0f; // X atual
-    screenCollisionY = newY + p->Yhitbox;                // Novo Y
-
-    // 2. CONVERSÃO: TELA -> IMAGEM DE COLISÃO
-    imageX = (screenCollisionX - scene->offsetMap.x) / scene->mapScale;
-    imageY = (screenCollisionY - scene->offsetMap.y) / scene->mapScale;
-
-    // Colisão Vertical: Verifica o X atual com o novo Y convertido
-    if (!collisionpixel(&scene->collision_image, imageX, imageY))
-    {
-        p->position.y = newY;
-    }
-
-    // Atualiza a hitbox do jogador
     p->rectangleHitbox = (Rectangle){p->position.x, p->position.y, p->Xhitbox, p->Yhitbox};
 }
 
@@ -88,23 +61,9 @@ void drawPlayer(Player *p)
     DrawCircle((int)debugX, (int)debugY, 3, RED);
 }
 
+
 void unloadPlayer(Player *p)
 {
     UnloadTexture(p->texture);
     TraceLog(LOG_INFO, "Heroi descarregado");
-}
-
-bool collisionpixel(Image *map, float x, float y)
-{
-    int px = (int)x;
-    int py = (int)y;
-
-    if (px < 0 || px >= map->width || py < 0 || py >= map->height)
-    {
-        return true;
-    }
-
-    Color pixelcolor = GetImageColor(*map, px, py);
-
-    return (pixelcolor.r == 0 && pixelcolor.g == 0 && pixelcolor.b == 0);
 }
