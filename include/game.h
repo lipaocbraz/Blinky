@@ -5,6 +5,7 @@ typedef enum GameScreen
 {
     TITLE = 0,
     GAMEPLAY,
-    ENDING
+    LOSING,
+    WINNING
 } GameScreen;
 #endif

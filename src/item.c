@@ -26,6 +26,7 @@ void DrawItem(Item* item)
     if (!item->collected)
     {
         DrawTexture(item->texture, (int)item->position.x, (int)item->position.y, item->color);
+        
         if(item->isDoor)
             DrawRectangleLinesEx(item->hitbox, 20, RED);
     }

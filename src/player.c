@@ -8,7 +8,7 @@ const float playerYhitbox_DEBUG = 200.0f;
 void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 {
     p->texture = LoadTexture(texturePath);
-    p->speed = 1.5f;
+    p->speed = 5.0f;
 
     p->position = startPos;
     p->keysCollected = 0;

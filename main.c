@@ -142,7 +142,7 @@ int main(void)
                 if (CheckItemCollision(&exit, hero.rectangleHitbox, &hero))
                 {
                     TraceLog(LOG_INFO, "JOGO: Jogador coletou a saída e venceu o jogo!");
-                    currentScreen = ENDING;
+                    currentScreen = WINNING;
                 }
             }
 
@@ -150,26 +150,26 @@ int main(void)
             if (CheckPlayerEnemyCollision(&hero, &enemy1))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = ENDING;
+                currentScreen = LOSING;
             }
             else if (CheckPlayerEnemyCollision(&hero, &enemy2))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = ENDING;
+                currentScreen = LOSING;
             }
             else if (CheckPlayerEnemyCollision(&hero, &enemy3))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = ENDING;
+                currentScreen = LOSING;
             }
             else if (CheckPlayerEnemyCollision(&hero, &enemy4))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = ENDING;
+                currentScreen = LOSING;
             }
         }
 
-        case ENDING:
+        case LOSING:
         {
             if (IsKeyPressed(KEY_P))
             {
@@ -229,7 +229,7 @@ int main(void)
             }
             break;
 
-            case ENDING:
+            case LOSING:
             {
                 int currentW = GetScreenWidth();
                 int currentH = GetScreenHeight();
@@ -248,6 +248,27 @@ int main(void)
                 DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
             }
             break;
+            
+            case WINNING:
+            {
+                int currentW = GetScreenWidth();
+                int currentH = GetScreenHeight();
+
+                const char *titulo = "VOCÊ ESCAPOU!!";
+                int fontSizeTitulo = 40;
+
+                const char *instrucao = "APERTE 'DELETE' PARA SAIR";
+                int fontSizeInstrucao = 20;
+
+                // 1. Centralização do Título:
+                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
+                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+                int yTitulo = currentH / 4;
+
+                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, GREEN);
+            }
+            break;
+            
             }
 
             EndDrawing();
