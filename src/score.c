@@ -43,7 +43,7 @@ void saveScoreList(double scores[], int count)
     {
         for (int i = 0; i < count; i++)
         {
-            fprintf(file, "============== %.3f ==============\n", scores[i]);
+            fprintf(file, "%.3f\n", scores[i]);
         }
         fclose(file);
     }
