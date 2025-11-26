@@ -6,16 +6,17 @@
 #include "player.h"
 #include "enemy.h"
 #include "item.h"
+#include "score.h" // Alterado de <score.h> para "score.h" para garantir o include correto
+#include "gameInitScreen.h"
+#include "gameInitEntities.h"
 #include <math.h> // Para fminf
 #include <time.h>
 #include <float.h> // Necessário para DBL_MAX
-#include "score.h" // Alterado de <score.h> para "score.h" para garantir o include correto
 #include <string.h>
 #include <stdio.h>
 
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
 // gcc main.c src/*.c -I include -I /opt/homebrew/include -o blinky.exe -L /opt/homebrew/lib -lraylib -std=c99
-// MARGEM DE ERRO DA FUNÇÃO DE MAPEAMENTO DE PIXELS: X=~-36px, Y=~-36px (monitor 24 polegadas)
 
 // Variáveis do usuário (Nomes mantidos)
 double start_time = 0.0;
@@ -25,45 +26,15 @@ char recordText[64];
 
 int main(void)
 {
-
-    // Configurações da Janela
-    int WINDOW_WIDTH = GetMonitorWidth(0);
-    int WINDOW_HEIGHT = GetMonitorHeight(0);
-
-    // A janela é iniciada com currentScreen = TITLE. Ao entrar no loop, os dois casos TITLE do switch são
-    // acionados sequencialmente, até que o jogador pressione ENTER, mudando currentScreen para GAMEPLAY.
-    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Blinky");
-    GameScreen currentScreen = TITLE;
-    SetTargetFPS(60);
-    Scene map1;
-    int cliques = 1;
-
-    // REMOVIDO: clock_t inicio, fim; double segundos; (Substituído por start_time e GetTime())
-
-    // Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
-    Player hero;
-
-    Enemy enemy1;
-    Enemy enemy2;
-    Enemy enemy3;
-    Enemy enemy4;
-
-    Item keyItem1;
-    Item keyItem2;
-    Item keyItem3;
-    Item exit;
-
-    exit.isDoor = true;
-    enemy2.color = PURPLE;
-
-    bool showDebug = true;
+    screenState screenState = iniciandoGame();
+    entityState entityState = iniciandoEntidades();
 
     while (!WindowShouldClose())
     {
         // =========================================================================
         // 1. BLOC O DE ATUALIZAÇÃO (UPDATE)
         // =========================================================================
-        switch (currentScreen)
+        switch (screenState.currentScreen)
         {
 
         case TITLE:
@@ -71,10 +42,10 @@ int main(void)
 
             if (IsKeyPressed(KEY_ENTER))
             {
-                currentScreen = GAMEPLAY;
-                InitScene(&map1, "assets/Cenario_medieval.png");
-                InitItem(&exit, "assets/exitRotation.png", (Vector2){1070.0f, 964.0f});
-                initPlayer(&hero, "assets/player.png", (Vector2){573.0f, 500.0f});
+                screenState.currentScreen = GAMEPLAY;
+                InitScene(&screenState.map1, "assets/Cenario_medieval.png");
+                InitItem(&entityState.exit, "assets/entityState.exitRotation.png", (Vector2){1070.0f, 964.0f});
+                initPlayer(&entityState.hero, "assets/player.png", (Vector2){1573.0f, 189.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
 
@@ -83,48 +54,48 @@ int main(void)
                 scoreCalculated = false;
 
                 // Inimigo[1]
-                InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy1, (Vector2){422.0f, 633.0f});
-                AddWaypoint(&enemy1, (Vector2){628.0f, 772.0f});
-                AddWaypoint(&enemy1, (Vector2){864.0f, 858.0f});
-                AddWaypoint(&enemy1, (Vector2){1125.0f, 914.0f});
-                AddWaypoint(&enemy1, (Vector2){1295.0f, 849.0f});
-                AddWaypoint(&enemy1, (Vector2){1509.0f, 691.0f});
-                AddWaypoint(&enemy1, (Vector2){1633.0f, 660.0f});
+                InitEnemy(&entityState.enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg");
+                AddWaypoint(&entityState.enemy1, (Vector2){422.0f, 633.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){628.0f, 772.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){864.0f, 858.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){1125.0f, 914.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){1295.0f, 849.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){1509.0f, 691.0f});
+                AddWaypoint(&entityState.enemy1, (Vector2){1633.0f, 660.0f});
 
                 // Inimigo[2]
-                InitEnemy(&enemy2, (Vector2){1370.0f, 310.0f}, 80.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy2, (Vector2){1255.0f, 397.0f});
-                AddWaypoint(&enemy2, (Vector2){1147.0f, 448.0f});
-                AddWaypoint(&enemy2, (Vector2){1331.0f, 522.0f});
-                AddWaypoint(&enemy2, (Vector2){1211.0f, 451.0f});
-                AddWaypoint(&enemy2, (Vector2){1077.0f, 412.0f});
-                AddWaypoint(&enemy2, (Vector2){953.0f, 352.0f});
-                AddWaypoint(&enemy2, (Vector2){959.0f, 211.0f});
+                InitEnemy(&entityState.enemy2, (Vector2){1370.0f, 310.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&entityState.enemy2, (Vector2){1255.0f, 397.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){1147.0f, 448.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){1331.0f, 522.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){1211.0f, 451.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){1077.0f, 412.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){953.0f, 352.0f});
+                AddWaypoint(&entityState.enemy2, (Vector2){959.0f, 211.0f});
 
                 // Inimigo[3]
-                InitEnemy(&enemy3, (Vector2){916.0f, 298.0f}, 80.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy3, (Vector2){761.0f, 391.0f});
-                AddWaypoint(&enemy3, (Vector2){673.0f, 461.0f});
-                AddWaypoint(&enemy3, (Vector2){608.0f, 389.0f});
-                AddWaypoint(&enemy3, (Vector2){608.0f, 482.0f});
-                AddWaypoint(&enemy3, (Vector2){503.0f, 566.0f});
-                AddWaypoint(&enemy3, (Vector2){419.0f, 654.0f});
-                AddWaypoint(&enemy3, (Vector2){534.0f, 722.0f});
+                InitEnemy(&entityState.enemy3, (Vector2){916.0f, 298.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&entityState.enemy3, (Vector2){761.0f, 391.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){673.0f, 461.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){608.0f, 389.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){608.0f, 482.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){503.0f, 566.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){419.0f, 654.0f});
+                AddWaypoint(&entityState.enemy3, (Vector2){534.0f, 722.0f});
 
                 // Inimigo[4]
-                InitEnemy(&enemy4, (Vector2){1516.0f, 692.0f}, 80.0f, "assets/ghost.jpg");
-                AddWaypoint(&enemy4, (Vector2){1419.0f, 596.0f});
-                AddWaypoint(&enemy4, (Vector2){1300.0f, 487.0f});
-                AddWaypoint(&enemy4, (Vector2){1559.0f, 682.0f});
-                AddWaypoint(&enemy4, (Vector2){1749.0f, 685.0f});
-                AddWaypoint(&enemy4, (Vector2){1851.0f, 585.0f});
-                AddWaypoint(&enemy4, (Vector2){1863.0f, 498.0f});
+                InitEnemy(&entityState.enemy4, (Vector2){1516.0f, 692.0f}, 80.0f, "assets/ghost.jpg");
+                AddWaypoint(&entityState.enemy4, (Vector2){1419.0f, 596.0f});
+                AddWaypoint(&entityState.enemy4, (Vector2){1300.0f, 487.0f});
+                AddWaypoint(&entityState.enemy4, (Vector2){1559.0f, 682.0f});
+                AddWaypoint(&entityState.enemy4, (Vector2){1749.0f, 685.0f});
+                AddWaypoint(&entityState.enemy4, (Vector2){1851.0f, 585.0f});
+                AddWaypoint(&entityState.enemy4, (Vector2){1863.0f, 498.0f});
 
                 // Item (chave)
-                InitItem(&keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});
-                InitItem(&keyItem2, "assets/keyItem.png", (Vector2){955.0f, 215.0f});
-                InitItem(&keyItem3, "assets/keyItem.png", (Vector2){1045.0f, 782.0f});
+                InitItem(&entityState.keyItem1, "assets/keyItem.png", (Vector2){1800.0f, 500.0f});
+                InitItem(&entityState.keyItem2, "assets/keyItem.png", (Vector2){955.0f, 215.0f});
+                InitItem(&entityState.keyItem3, "assets/keyItem.png", (Vector2){1045.0f, 782.0f});
 
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
             }
@@ -134,52 +105,52 @@ int main(void)
         case GAMEPLAY:
         {
             // O update do player foi corrigido em player.c para funcionar!
-            UpdatePlayer(&hero, &map1);
-            UpdateEnemy(&enemy1, GetFrameTime());
-            UpdateEnemy(&enemy2, GetFrameTime());
-            UpdateEnemy(&enemy3, GetFrameTime());
-            UpdateEnemy(&enemy4, GetFrameTime());
+            UpdatePlayer(&entityState.hero, &screenState.map1);
+            UpdateEnemy(&entityState.enemy1, GetFrameTime());
+            UpdateEnemy(&entityState.enemy2, GetFrameTime());
+            UpdateEnemy(&entityState.enemy3, GetFrameTime());
+            UpdateEnemy(&entityState.enemy4, GetFrameTime());
 
             // 🔨 Captura de clique do mouse para mapeamento de pixels!!
             Vector2 screenMouse = GetMousePosition();
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
-                TraceLog(LOG_INFO, "%i. Coordenadas do Mapa: X: %.0f, Y: %.0f", cliques, screenMouse.x, screenMouse.y);
-                cliques++;
+                TraceLog(LOG_INFO, "%i. Coordenadas do Mapa: X: %.0f, Y: %.0f", screenState.cliques, screenMouse.x, screenMouse.y);
+                screenState.cliques++;
             }
 
             // Verifica colisão do jogador com o item (chave)
-            if (CheckItemCollision(&keyItem1, hero.rectangleHitbox, &hero))
+            if (CheckItemCollision(&entityState.keyItem1, entityState.hero.rectangleHitbox, &entityState.hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", entityState.hero.keysCollected);
             }
-            if (CheckItemCollision(&keyItem2, hero.rectangleHitbox, &hero))
+            if (CheckItemCollision(&entityState.keyItem2, entityState.hero.rectangleHitbox, &entityState.hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", entityState.hero.keysCollected);
             }
-            if (CheckItemCollision(&keyItem3, hero.rectangleHitbox, &hero))
+            if (CheckItemCollision(&entityState.keyItem3, entityState.hero.rectangleHitbox, &entityState.hero))
             {
-                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", hero.keysCollected);
+                TraceLog(LOG_INFO, "JOGO: Jogador coletou %i chaves!", entityState.hero.keysCollected);
             }
 
-            if (hero.keysCollected >= 3)
+            if (entityState.hero.keysCollected >= 3)
             {
-                if (CheckItemCollision(&exit, hero.rectangleHitbox, &hero))
+                if (CheckItemCollision(&entityState.exit, entityState.hero.rectangleHitbox, &entityState.hero))
                 {
                     TraceLog(LOG_INFO, "JOGO: Jogador coletou a saída e venceu o jogo!");
-                    currentScreen = WINNING;
+                    screenState.currentScreen = WINNING;
                 }
             }
 
             // Colisões com inimigos (Simplificado para uma única verificação)
-            if (CheckPlayerEnemyCollision(&hero, &enemy1) ||
-                CheckPlayerEnemyCollision(&hero, &enemy2) ||
-                CheckPlayerEnemyCollision(&hero, &enemy3) ||
-                CheckPlayerEnemyCollision(&hero, &enemy4))
+            if (CheckPlayerEnemyCollision(&entityState.hero, &entityState.enemy1) ||
+                CheckPlayerEnemyCollision(&entityState.hero, &entityState.enemy2) ||
+                CheckPlayerEnemyCollision(&entityState.hero, &entityState.enemy3) ||
+                CheckPlayerEnemyCollision(&entityState.hero, &entityState.enemy4))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = LOSING;
+                screenState.currentScreen = LOSING;
             }
         }
         break;
@@ -222,13 +193,13 @@ int main(void)
         } // Fim do switch de UPDATE
 
         // =========================================================================
-        // 2. BLOC O DE DESENHO (DRAW) - CORRIGIDO: Fora do switch de UPDATE
+        // 2. BLOCO DE DESENHO (DRAW) - CORRIGIDO: Fora do switch de UPDATE
         // =========================================================================
         BeginDrawing();
         ClearBackground(RAYWHITE); // Limpa a tela
 
         // Aqui temos a renderização de cada tela do jogo de fato
-        switch (currentScreen)
+        switch (screenState.currentScreen)
         {
         case TITLE:
         {
@@ -257,19 +228,19 @@ int main(void)
 
         case GAMEPLAY:
         {
-            DrawScene(&map1);
-            drawPlayer(&hero);
-            DrawEnemy(&enemy1, showDebug);
-            DrawEnemy(&enemy2, showDebug);
-            DrawEnemy(&enemy3, showDebug);
-            DrawEnemy(&enemy4, showDebug);
-            DrawItem(&keyItem1);
-            DrawItem(&keyItem2);
-            DrawItem(&keyItem3);
+            DrawScene(&screenState.map1);
+            drawPlayer(&entityState.hero);
+            DrawEnemy(&entityState.enemy1, screenState.showDebug);
+            DrawEnemy(&entityState.enemy2, screenState.showDebug);
+            DrawEnemy(&entityState.enemy3, screenState.showDebug);
+            DrawEnemy(&entityState.enemy4, screenState.showDebug);
+            DrawItem(&entityState.keyItem1);
+            DrawItem(&entityState.keyItem2);
+            DrawItem(&entityState.keyItem3);
 
-            if (hero.keysCollected >= 3)
+            if (entityState.hero.keysCollected >= 3)
             {
-                DrawItem(&exit);
+                DrawItem(&entityState.exit);
                 TraceLog(LOG_INFO, "Porta a mostra!!");
             }
 
@@ -365,7 +336,7 @@ int main(void)
         // Ação de Unload/Fechar (Apenas após o jogo terminar)
         // -------------------------------------------------------------------------
 
-        if (currentScreen == LOSING || currentScreen == WINNING)
+        if (screenState.currentScreen == LOSING || screenState.currentScreen == WINNING)
         {
             if (IsKeyPressed(KEY_DELETE))
             {
@@ -375,10 +346,10 @@ int main(void)
             if (IsKeyPressed(KEY_P))
             {
                 // Faz unload dos assets antes de voltar para o Título
-                UnloadScene(&map1);
-                unloadPlayer(&hero);
+                UnloadScene(&screenState.map1);
+                unloadPlayer(&entityState.hero);
                 // Unload de inimigos, itens, etc. (adicione se necessário)
-                currentScreen = TITLE;
+                screenState.currentScreen = TITLE;
             }
         }
     } // Fim do while (!WindowShouldClose())

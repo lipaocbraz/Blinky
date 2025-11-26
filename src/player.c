@@ -37,7 +37,7 @@ void UpdatePlayer(Player *p, Scene *scene)
     else if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
         newY -= p->speed;
 
-    if (!CheckSceneCollision(scene, (Vector2){newX, newY}))
+    if (CheckSceneCollision(scene, (Vector2){newX, newY}))
     {
         p->position = p->position;
         TraceLog(LOG_INFO, "PLAYER: Colisão detectada. Movimento bloqueado.");
