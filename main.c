@@ -96,6 +96,15 @@ int main(void)
         break;
 
         case LOSING:
+        {
+
+            if (IsKeyPressed(KEY_DELETE) || IsKeyPressed(KEY_P))
+            {
+                break;
+            }
+        }
+        break;
+
         case WINNING: // Aplica a lógica de score para ambas as telas
         {
             if (!scoreCalculated)
@@ -207,18 +216,6 @@ int main(void)
             int yTitulo = currentH / 4;
 
             DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
-
-            // 2. Exibição do Score
-            int fontSizeScore = 30;
-            int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
-            int yScore = currentH / 2;
-            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
-
-            // 3. Exibição do Recorde
-            int fontSizeRecorde = 25;
-            int xRecorde = currentW / 2 - MeasureText(recordText, fontSizeRecorde) / 2;
-            int yRecorde = currentH / 2 + 50;
-            DrawText(recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
 
             // 4. Instrução
             int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
