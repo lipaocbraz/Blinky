@@ -43,7 +43,7 @@ void saveScoreList(double scores[], int count)
     {
         for (int i = 0; i < count; i++)
         {
-            fprintf(file, "%.3f\n", scores[i]);
+            fprintf(file, "===   %.3f  ===\n", scores[i]);
         }
         fclose(file);
     }
@@ -56,14 +56,19 @@ void saveScoreList(double scores[], int count)
 // Função principal para salvar e ordenar o novo score
 void saveNewScore(double new_score)
 {
-    double scores[MAX_SCORES + 1]; // +1 para acomodar o novo score temporariamente
+    double *scores = (double *)malloc((MAX_SCORES + 1) * sizeof(double));
     int count;
 
-    // 1. Carrega os scores existentes
+    if (scores == NULL)
+    {
+        TraceLog(LOG_ERROR, "SCORE: FALHA NA ALOCAÇÃO DE MEMORIA PARA SCORES!");
+        return;
+    }
+
     LoadScoreList(scores, &count);
 
     // 2. Adiciona o novo score
-    if (count < MAX_SCORES)
+    if (scores == NULL)
     {
         scores[count] = new_score;
         count++;
