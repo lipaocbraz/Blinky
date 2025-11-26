@@ -7,6 +7,7 @@
 #include "score.h" // Alterado de <score.h> para "score.h" para garantir o include correto
 #include "gameInitScreen.h"
 #include "gameInitEntities.h"
+#include "gameInitTimer.h"
 #include <math.h> // Para fminf
 #include <time.h>
 #include <float.h> // Necessário para DBL_MAX
@@ -16,14 +17,12 @@
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
 // gcc main.c src/*.c -I include -I /opt/homebrew/include -o blinky.exe -L /opt/homebrew/lib -lraylib -std=c99
 
-// Variáveis do usuário (Nomes mantidos)
-double start_time = 0.0;
-bool scoreCalculated = false; // Flag para garantir que o tempo só seja medido uma vez
-char scoreText[64];
-char recordText[64];
-
 int main(void)
 {
+
+    // Variáveis do usuário (Nomes mantidos)
+    timerState timeState= newTimerState();
+
     screenState screenState = iniciandoGame();
     entityState entityState = iniciandoEntidades();
 
@@ -43,8 +42,8 @@ int main(void)
                 entityState.isInitiated = iniciandoInimigos(&entityState);
 
                 // Inicio timer
-                start_time = GetTime();
-                scoreCalculated = false;
+                timeState.start_time = GetTime();
+                timeState.scoreCalculated = false;
 
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
                 screenState.currentScreen = TITLE;
@@ -98,17 +97,17 @@ int main(void)
         case LOSING:
         case WINNING: // Aplica a lógica de score para ambas as telas
         {
-            if (!scoreCalculated)
+            if (!timeState.scoreCalculated)
             {
-                double finaltime = GetTime() - start_time;
+                double finaltime = GetTime() - timeState.start_time;
 
                 saveNewScore(finaltime);
 
-                snprintf(scoreText, 64, "Seu tempo: %.3f segundos", finaltime);
+                snprintf(timeState.scoreText, 64, "Seu tempo: %.3f segundos", finaltime);
 
-                snprintf(recordText, 64, "Ranking Atualizado!");
+                snprintf(timeState.recordText, 64, "Ranking Atualizado!");
 
-                scoreCalculated = true; // Flag ativada
+                timeState.scoreCalculated = true; // Flag ativada
                 TraceLog(LOG_INFO, "SCORE: Tempo final calculado: %.3f", finaltime);
             }
 
@@ -179,7 +178,7 @@ int main(void)
             }
 
             // DESENHO DO TIMER CENTRALIZADO
-            double segundos = GetTime() - start_time;
+            double segundos = GetTime() - timeState.start_time;
             char timerText[64];
             snprintf(timerText, 64, "Tempo: %.3f s", segundos);
 
@@ -210,15 +209,15 @@ int main(void)
 
             // 2. Exibição do Score
             int fontSizeScore = 30;
-            int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
+            int xScore = currentW / 2 - MeasureText(timeState.scoreText, fontSizeScore) / 2;
             int yScore = currentH / 2;
-            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
+            DrawText(timeState.scoreText, xScore, yScore, fontSizeScore, WHITE);
 
             // 3. Exibição do Recorde
             int fontSizeRecorde = 25;
-            int xRecorde = currentW / 2 - MeasureText(recordText, fontSizeRecorde) / 2;
+            int xRecorde = currentW / 2 - MeasureText(timeState.recordText, fontSizeRecorde) / 2;
             int yRecorde = currentH / 2 + 50;
-            DrawText(recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
+            DrawText(timeState.recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
 
             // 4. Instrução
             int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
@@ -243,17 +242,17 @@ int main(void)
 
             DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, GREEN);
 
-            // 2. Exibição do Score (Variável do usuário 'scoreText')
+            // 2. Exibição do Score (Variável do usuário 'timeState.scoreText')
             int fontSizeScore = 30;
-            int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
+            int xScore = currentW / 2 - MeasureText(timeState.scoreText, fontSizeScore) / 2;
             int yScore = currentH / 2;
-            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
+            DrawText(timeState.scoreText, xScore, yScore, fontSizeScore, WHITE);
 
-            // 3. Exibição do Recorde (Variável do usuário 'recordText')
+            // 3. Exibição do Recorde (Variável do usuário 'timeState.recordText')
             int fontSizeRecorde = 25;
-            int xRecorde = currentW / 2 - MeasureText(recordText, fontSizeRecorde) / 2;
+            int xRecorde = currentW / 2 - MeasureText(timeState.recordText, fontSizeRecorde) / 2;
             int yRecorde = currentH / 2 + 50;
-            DrawText(recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
+            DrawText(timeState.recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
 
             // 4. Instrução
             int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;

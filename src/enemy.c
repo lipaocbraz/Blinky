@@ -14,21 +14,23 @@ void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFra
     enemy->speed = speed;
     enemy->Xhitbox = MAIN_XHITBOX;
     enemy->Yhitbox = MAIN_YHITBOX;
-    enemy->waypointCount = 0;
-    enemy->currentWaypoint = 0;
-    enemy->movingForward = true;
     enemy->active = true;
     enemy->color = WHITE;
+    
+    //Frames, movimentação e sprites
     enemy->frameCount = 4;
     enemy->currentFrameIndex = 0;
     enemy->frameTime = 0.2f;
     enemy->frameTimer = 0.0f;
     enemy->flipX = false;
     enemy->texture = LoadTexture(firstFramePath);
-
+    enemy->movingForward = true;
+    
     // Primeiro waypoint é a posição inicial
     enemy->waypoints[0] = startPos;
     enemy->waypointCount = 1;
+    enemy->waypointCount = 0;
+    enemy->currentWaypoint = 0;
 }
 
 void AddWaypoint(Enemy *enemy, Vector2 waypoint)

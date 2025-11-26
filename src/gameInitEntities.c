@@ -36,7 +36,7 @@ Vector2 AdjustPosition(float x, float y) {
 }
 
 bool iniciandoInimigos(entityState *entityState){
-    InitItem(&entityState->exit, "assets/entityState.exitRotation.png", AdjustPosition(1070.0f, 964.0f));
+    InitItem(&entityState->exit, "assets/exitRotation.png", AdjustPosition(1070.0f, 964.0f));
     initPlayer(&entityState->hero, "assets/player.png", AdjustPosition(1573.0f, 189.0f));
 
     TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
