@@ -18,6 +18,8 @@ typedef struct {
     Item keyItem2;
     Item keyItem3;
     Item exit;
+
+    bool isInitiated;
 } entityState;
 
 /**
@@ -25,5 +27,6 @@ typedef struct {
  * @return entityState inicializada.
  */
 entityState iniciandoEntidades();
+bool iniciandoInimigos(entityState *entityState);
 
 #endif 

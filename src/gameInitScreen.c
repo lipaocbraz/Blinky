@@ -13,7 +13,7 @@ typedef struct {
 
 screenState iniciandoGame() {
     screenState state;
-    state.currentScreen = TITLE;
+    state.currentScreen = INITIALIZE;
     state.cliques = 1;
     state.showDebug = true;
 
