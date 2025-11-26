@@ -300,7 +300,7 @@ int main(void)
             int fontSizeScore = 30;
             int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
             int yScore = currentH / 2;
-            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
+            DrawText(scoreText, xScore, yScore, fontSizeScore, RED);
 
             // 3. Exibição do Recorde (Variável do usuário 'recordText')
             int fontSizeRecorde = 25;
