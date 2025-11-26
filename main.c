@@ -1,3 +1,5 @@
+// Arquivo: main.c (AJUSTADO)
+
 #include <raylib.h>
 #include <scene.h>
 #include "game.h"
@@ -6,14 +8,20 @@
 #include "item.h"
 #include <math.h> // Para fminf
 #include <time.h>
-#include <float.h>
-#include <score.h>
+#include <float.h> // Necessário para DBL_MAX
+#include "score.h" // Alterado de <score.h> para "score.h" para garantir o include correto
 #include <string.h>
 #include <stdio.h>
 
 // Sempre que precisar compilar para gerar um novo executável com as alterações, o comando é:
-// gcc main.c src/*.c -I include -o blinky.exe -lraylib -lopengl32 -lgdi32 -lwinmm
+// gcc main.c src/*.c -I include -I /opt/homebrew/include -o blinky.exe -L /opt/homebrew/lib -lraylib -std=c99
 // MARGEM DE ERRO DA FUNÇÃO DE MAPEAMENTO DE PIXELS: X=~-36px, Y=~-36px (monitor 24 polegadas)
+
+// Variáveis do usuário (Nomes mantidos)
+double start_time = 0.0;
+bool scoreCalculated = false; // Flag para garantir que o tempo só seja medido uma vez
+char scoreText[64];
+char recordText[64];
 
 int main(void)
 {
@@ -30,11 +38,7 @@ int main(void)
     Scene map1;
     int cliques = 1;
 
-    clock_t inicio = 0;
-    clock_t fim = 0;
-    double segundos = 0.0;
-    bool time_measured = false; // Flag para garantir que o tempo só seja medido uma vez
-    // -------------------------------
+    // REMOVIDO: clock_t inicio, fim; double segundos; (Substituído por start_time e GetTime())
 
     // Definição dos objetos do cenário (players, inimigos, itens, armas, etc.)
     Player hero;
@@ -56,6 +60,9 @@ int main(void)
 
     while (!WindowShouldClose())
     {
+        // =========================================================================
+        // 1. BLOC O DE ATUALIZAÇÃO (UPDATE)
+        // =========================================================================
         switch (currentScreen)
         {
 
@@ -70,6 +77,10 @@ int main(void)
                 initPlayer(&hero, "assets/player.png", (Vector2){573.0f, 500.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
+
+                // Inicio timer
+                start_time = GetTime();
+                scoreCalculated = false;
 
                 // Inimigo[1]
                 InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg");
@@ -118,9 +129,11 @@ int main(void)
                 TraceLog(LOG_INFO, "Inimigos inicializados.");
             }
         }
+        break;
+
         case GAMEPLAY:
         {
-            inicio = clock();
+            // O update do player foi corrigido em player.c para funcionar!
             UpdatePlayer(&hero, &map1);
             UpdateEnemy(&enemy1, GetFrameTime());
             UpdateEnemy(&enemy2, GetFrameTime());
@@ -159,165 +172,216 @@ int main(void)
                 }
             }
 
-            // Colisões com inimigos
-            if (CheckPlayerEnemyCollision(&hero, &enemy1))
-            {
-                TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = LOSING;
-            }
-            else if (CheckPlayerEnemyCollision(&hero, &enemy2))
-            {
-                TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = LOSING;
-            }
-            else if (CheckPlayerEnemyCollision(&hero, &enemy3))
-            {
-                TraceLog(LOG_INFO, "Player colidiu com inimigo!");
-                currentScreen = LOSING;
-            }
-            else if (CheckPlayerEnemyCollision(&hero, &enemy4))
+            // Colisões com inimigos (Simplificado para uma única verificação)
+            if (CheckPlayerEnemyCollision(&hero, &enemy1) ||
+                CheckPlayerEnemyCollision(&hero, &enemy2) ||
+                CheckPlayerEnemyCollision(&hero, &enemy3) ||
+                CheckPlayerEnemyCollision(&hero, &enemy4))
             {
                 TraceLog(LOG_INFO, "Player colidiu com inimigo!");
                 currentScreen = LOSING;
             }
         }
+        break;
 
         case LOSING:
+        case WINNING: // Aplica a lógica de score para ambas as telas
         {
-            fim = clock();
-            segundos = (double)(fim - inicio) / CLOCK_UPTIME_RAW;
-            time_measured = true;
-            LoadTopScore();
-
-            printf("\n%f SEGUNDOS\n", segundos);
-
-            if (IsKeyPressed(KEY_P))
+            if (!scoreCalculated)
             {
-                UnloadScene(&map1);
-            }
-        }
+                // Variável do usuário 'start_time' mantida
+                double finaltime = GetTime() - start_time;
 
-            BeginDrawing();
-            ClearBackground(BLACK);
-
-            // Aqui temos a renderização de cada tela do jogo de fato
-            switch (currentScreen)
-            {
-            case TITLE:
-            {
-                int currentW = GetScreenWidth();
-                int currentH = GetScreenHeight();
-
-                const char *titulo = "MEU JOGO BLINKY";
-                int fontSizeTitulo = 40;
-
-                const char *instrucao = "Pressione ENTER para JOGAR";
-                int fontSizeInstrucao = 20;
-
-                // 1. Centralização do Título:
-                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
-                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
-                int yTitulo = currentH / 4;
-
-                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, DARKBLUE);
-
-                // 2. Centralização da Instrução:
-                int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
-                int yInstrucao = currentH / 2;
-
-                DrawText(instrucao, xInstrucao, yInstrucao, fontSizeInstrucao, BLACK);
-            }
-            break;
-
-            // O segundo mapa deve ser adicionado aqui
-            case GAMEPLAY:
-            {
-                DrawScene(&map1);
-                drawPlayer(&hero);
-                DrawEnemy(&enemy1, showDebug);
-                DrawEnemy(&enemy2, showDebug);
-                DrawEnemy(&enemy3, showDebug);
-                DrawEnemy(&enemy4, showDebug);
-                DrawItem(&keyItem1);
-                DrawItem(&keyItem2);
-                DrawItem(&keyItem3);
-
-                if (hero.keysCollected >= 3)
-                {
-                    DrawItem(&exit);
-                    TraceLog(LOG_INFO, "Porta a mostra!!");
-                }
-            }
-            break;
-
-            case LOSING:
-            {
-                int currentW = GetScreenWidth();
-                int currentH = GetScreenHeight();
-
-                const char *titulo = "GAME OVER";
-                int fontSizeTitulo = 40;
-
-                // --- EXIBIÇÃO DO SCORE ---
-                char scoreText[64];
-                snprintf(scoreText, 64, "Seu tempo: %.3f segundos", segundos);
-
+                // Funções do score agora usam double
+                saveTopScore(finaltime);
                 double recorde = LoadTopScore();
-                char recordeText[64];
+
+                // Variáveis de texto do usuário 'scoreText' e 'recordText' mantidas
+                snprintf(scoreText, 64, "Seu tempo: %.3f segundos", finaltime);
+
                 if (recorde < DBL_MAX)
                 {
-                    snprintf(recordeText, 64, "Recorde: %.3f segundos", recorde);
+                    snprintf(recordText, 64, "Recorde: %.3f segundos", recorde);
                 }
                 else
                 {
-                    strcpy(recordeText, "Recorde: N/A");
+                    strcpy(recordText, "Recorde: N/A");
                 }
-
-                const char *instrucao = "APERTE 'DELETE' PARA SAIR";
-                int fontSizeInstrucao = 20;
-
-                // 1. Centralização do Título:
-                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
-                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
-                int yTitulo = currentH / 4;
-
-                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
+                scoreCalculated = true; // Flag ativada
+                TraceLog(LOG_INFO, "SCORE: Tempo final calculado: %.3f", finaltime);
             }
-            break;
 
-            case WINNING:
+            if (IsKeyPressed(KEY_DELETE) || IsKeyPressed(KEY_P))
             {
-
-                int currentW = GetScreenWidth();
-                int currentH = GetScreenHeight();
-
-                const char *titulo = "VOCÊ ESCAPOU!!";
-                int fontSizeTitulo = 40;
-
-                const char *instrucao = "APERTE 'DELETE' PARA SAIR";
-                int fontSizeInstrucao = 20;
-
-                // 1. Centralização do Título:
-                // Pos X = (Metade da Tela) - (Metade da Largura do Texto)
-                int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
-                int yTitulo = currentH / 4;
-
-                DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, GREEN);
+                // A ação de Unload é feita fora do loop principal, após o switch
+                break; // Sai do case.
             }
-            break;
-            }
-
-            EndDrawing();
         }
-    }
-    if (currentScreen == GAMEPLAY)
-    {
-        UnloadScene(&map1);
-        unloadPlayer(&hero);
-    }
+        break;
 
-    double score = GetTime();
-    // Adicionar escrita em arquivo de score aqui
+        } // Fim do switch de UPDATE
+
+        // =========================================================================
+        // 2. BLOC O DE DESENHO (DRAW) - CORRIGIDO: Fora do switch de UPDATE
+        // =========================================================================
+        BeginDrawing();
+        ClearBackground(RAYWHITE); // Limpa a tela
+
+        // Aqui temos a renderização de cada tela do jogo de fato
+        switch (currentScreen)
+        {
+        case TITLE:
+        {
+            int currentW = GetScreenWidth();
+            int currentH = GetScreenHeight();
+
+            const char *titulo = "MEU JOGO BLINKY";
+            int fontSizeTitulo = 40;
+
+            const char *instrucao = "Pressione ENTER para JOGAR";
+            int fontSizeInstrucao = 20;
+
+            // 1. Centralização do Título:
+            int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+            int yTitulo = currentH / 4;
+
+            DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, DARKBLUE);
+
+            // 2. Centralização da Instrução:
+            int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
+            int yInstrucao = currentH / 2;
+
+            DrawText(instrucao, xInstrucao, yInstrucao, fontSizeInstrucao, BLACK);
+        }
+        break;
+
+        case GAMEPLAY:
+        {
+            DrawScene(&map1);
+            drawPlayer(&hero);
+            DrawEnemy(&enemy1, showDebug);
+            DrawEnemy(&enemy2, showDebug);
+            DrawEnemy(&enemy3, showDebug);
+            DrawEnemy(&enemy4, showDebug);
+            DrawItem(&keyItem1);
+            DrawItem(&keyItem2);
+            DrawItem(&keyItem3);
+
+            if (hero.keysCollected >= 3)
+            {
+                DrawItem(&exit);
+                TraceLog(LOG_INFO, "Porta a mostra!!");
+            }
+
+            // NOVO: DESENHO DO TIMER CENTRALIZADO
+            double segundos = GetTime() - start_time;
+            char timerText[64];
+            snprintf(timerText, 64, "Tempo: %.3f s", segundos);
+
+            int fontSize = 30;
+            int textWidth = MeasureText(timerText, fontSize);
+            int xPos = (GetScreenWidth() / 2) - (textWidth / 2);
+            int yPos = 20; // Perto do topo
+
+            DrawText(timerText, xPos, yPos, fontSize, LIME);
+        }
+        break;
+
+        case LOSING:
+        {
+            int currentW = GetScreenWidth();
+            int currentH = GetScreenHeight();
+
+            const char *titulo = "GAME OVER";
+            int fontSizeTitulo = 40;
+            const char *instrucao = "APERTE 'DELETE' PARA SAIR ou 'P' para o Título";
+            int fontSizeInstrucao = 20;
+
+            // 1. Centralização do Título:
+            int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+            int yTitulo = currentH / 4;
+
+            DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
+
+            // 2. Exibição do Score (Variável do usuário 'scoreText')
+            int fontSizeScore = 30;
+            int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
+            int yScore = currentH / 2;
+            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
+
+            // 3. Exibição do Recorde (Variável do usuário 'recordText')
+            int fontSizeRecorde = 25;
+            int xRecorde = currentW / 2 - MeasureText(recordText, fontSizeRecorde) / 2;
+            int yRecorde = currentH / 2 + 50;
+            DrawText(recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
+
+            // 4. Instrução
+            int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
+            int yInstrucao = currentH - 50;
+            DrawText(instrucao, xInstrucao, yInstrucao, fontSizeInstrucao, WHITE);
+        }
+        break;
+
+        case WINNING:
+        {
+            int currentW = GetScreenWidth();
+            int currentH = GetScreenHeight();
+
+            const char *titulo = "VOCÊ ESCAPOU!!";
+            int fontSizeTitulo = 40;
+            const char *instrucao = "APERTE 'DELETE' PARA SAIR ou 'P' para o Título";
+            int fontSizeInstrucao = 20;
+
+            // 1. Centralização do Título:
+            int xTitulo = currentW / 2 - MeasureText(titulo, fontSizeTitulo) / 2;
+            int yTitulo = currentH / 4;
+
+            DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, GREEN);
+
+            // 2. Exibição do Score (Variável do usuário 'scoreText')
+            int fontSizeScore = 30;
+            int xScore = currentW / 2 - MeasureText(scoreText, fontSizeScore) / 2;
+            int yScore = currentH / 2;
+            DrawText(scoreText, xScore, yScore, fontSizeScore, WHITE);
+
+            // 3. Exibição do Recorde (Variável do usuário 'recordText')
+            int fontSizeRecorde = 25;
+            int xRecorde = currentW / 2 - MeasureText(recordText, fontSizeRecorde) / 2;
+            int yRecorde = currentH / 2 + 50;
+            DrawText(recordText, xRecorde, yRecorde, fontSizeRecorde, GOLD);
+
+            // 4. Instrução
+            int xInstrucao = currentW / 2 - MeasureText(instrucao, fontSizeInstrucao) / 2;
+            int yInstrucao = currentH - 50;
+            DrawText(instrucao, xInstrucao, yInstrucao, fontSizeInstrucao, WHITE);
+        }
+        break;
+
+        } // Fim do switch de DRAW
+
+        EndDrawing();
+
+        // -------------------------------------------------------------------------
+        // Ação de Unload/Fechar (Apenas após o jogo terminar)
+        // -------------------------------------------------------------------------
+
+        if (currentScreen == LOSING || currentScreen == WINNING)
+        {
+            if (IsKeyPressed(KEY_DELETE))
+            {
+                // Sai do loop principal
+                break;
+            }
+            if (IsKeyPressed(KEY_P))
+            {
+                // Faz unload dos assets antes de voltar para o Título
+                UnloadScene(&map1);
+                unloadPlayer(&hero);
+                // Unload de inimigos, itens, etc. (adicione se necessário)
+                currentScreen = TITLE;
+            }
+        }
+    } // Fim do while (!WindowShouldClose())
 
     CloseWindow();
     return 0;
