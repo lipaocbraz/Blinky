@@ -70,7 +70,6 @@ int main(void)
                 initPlayer(&hero, "assets/player.png", (Vector2){573.0f, 500.0f});
 
                 TraceLog(LOG_INFO, "JOGO: Cena de Jogo iniciada.");
-                inicio = clock();
 
                 // Inimigo[1]
                 InitEnemy(&enemy1, (Vector2){221.0f, 466.0f}, 100.0f, "assets/ghost.jpg");
@@ -121,6 +120,7 @@ int main(void)
         }
         case GAMEPLAY:
         {
+            inicio = clock();
             UpdatePlayer(&hero, &map1);
             UpdateEnemy(&enemy1, GetFrameTime());
             UpdateEnemy(&enemy2, GetFrameTime());
@@ -185,8 +185,12 @@ int main(void)
         case LOSING:
         {
             fim = clock();
-            segundos = (double)(fim - inicio) / CLOCKS_PER_SEC;
+            segundos = (double)(fim - inicio) / CLOCK_UPTIME_RAW;
             time_measured = true;
+            LoadTopScore();
+
+            printf("\n%f SEGUNDOS\n", segundos);
+
             if (IsKeyPressed(KEY_P))
             {
                 UnloadScene(&map1);
@@ -280,9 +284,10 @@ int main(void)
                 DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, RED);
             }
             break;
-            
+
             case WINNING:
             {
+
                 int currentW = GetScreenWidth();
                 int currentH = GetScreenHeight();
 
@@ -300,7 +305,6 @@ int main(void)
                 DrawText(titulo, xTitulo, yTitulo, fontSizeTitulo, GREEN);
             }
             break;
-            
             }
 
             EndDrawing();
