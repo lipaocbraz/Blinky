@@ -9,7 +9,7 @@
 void InitScene(Scene *scene, const char *imagePath)
 {
     scene->map = LoadTexture(imagePath);
-    scene->collision_image = LoadImage("assets/Collision_map2.png");
+    scene->collision_image = LoadImage("assets/collision.png");
     scene->collision_pixels = LoadImageColors(scene->collision_image);
 }
 
