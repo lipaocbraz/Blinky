@@ -193,20 +193,13 @@ int main(void)
                 double finaltime = GetTime() - start_time;
 
                 // Funções do score agora usam double
-                saveTopScore(finaltime);
-                double recorde = LoadTopScore();
+                saveNewScore(finaltime);
 
                 // Variáveis de texto do usuário 'scoreText' e 'recordText' mantidas
                 snprintf(scoreText, 64, "Seu tempo: %.3f segundos", finaltime);
 
-                if (recorde < DBL_MAX)
-                {
-                    snprintf(recordText, 64, "Recorde: %.3f segundos", recorde);
-                }
-                else
-                {
-                    strcpy(recordText, "Recorde: N/A");
-                }
+                snprintf(recordText, 64, "Ranking Atualizado!");
+
                 scoreCalculated = true; // Flag ativada
                 TraceLog(LOG_INFO, "SCORE: Tempo final calculado: %.3f", finaltime);
             }
