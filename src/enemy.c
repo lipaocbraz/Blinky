@@ -3,11 +3,18 @@
 #include "player.h"
 #define MAIN_XHITBOX 32
 #define MAIN_YHITBOX 27
+#define MAIN_HEIGHT 32 //56
+#define MAIN_WIDTH 32 //56
+
+// 0.03f - Muito rápido (33 FPS de animação)
+// 0.05f - Rápido (20 FPS de animação)
+// 0.08f - Normal (12.5 FPS de animação)
+// 0.15f - Devagar (6.6 FPS de animação)
+// 0.25f - Muito devagar (4 FPS de animação)
 
 // Inicializa um inimigo com vários assets diferentes para animação, velocidade e posição inicial
 void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFramePath)
 {
-
     // Largura e altura definidos na constante do cabeçalho da classe
     enemy->position = startPos;
     enemy->velocity = (Vector2){0, 0};
@@ -16,15 +23,19 @@ void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFra
     enemy->Yhitbox = MAIN_YHITBOX;
     enemy->active = true;
     enemy->color = WHITE;
+    enemy->spriteHeight = MAIN_HEIGHT;
+    enemy->spriteWidth = MAIN_WIDTH;
     
     //Frames, movimentação e sprites
-    enemy->frameCount = 4;
+    enemy->frameQtd = 12;
     enemy->currentFrameIndex = 0;
-    enemy->frameTime = 0.2f;
+    enemy->currentFrameSheetLine = 0;
+    enemy->frameTime = 0.05f;
     enemy->frameTimer = 0.0f;
     enemy->flipX = false;
     enemy->texture = LoadTexture(firstFramePath);
     enemy->movingForward = true;
+    enemy->framePosition = 
     
     // Primeiro waypoint é a posição inicial
     enemy->waypoints[0] = startPos;
@@ -45,6 +56,7 @@ void AddWaypoint(Enemy *enemy, Vector2 waypoint)
 // void UpdateEnemy(Enemy* enemy, CollisionMap* colMap, float deltaTime)
 void UpdateEnemy(Enemy *enemy, float deltaTime)
 {
+
     if (!enemy->active || enemy->waypointCount < 2)
         return;
 
@@ -82,6 +94,14 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
         return;
     }
 
+    // Se passou tempo suficiente (frameTime), troca de sprite
+    enemy->frameTimer += deltaTime;
+    if (enemy->frameTimer >= enemy->frameTime)
+    {
+        enemy->frameTimer = 0.0f;        
+        enemy->currentFrameIndex++;
+    }
+
     // Normaliza a direção
     direction.x /= distance;
     direction.y /= distance;
@@ -100,45 +120,39 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
 
     DrawRectangleLinesEx(newRect, 10, GREEN);
 
-    // 📢 OS COMENTARIO SÃO PARA REMOVER AS COLISÕES DO COLLISIONMAP
-    // Se não colidir, move
-    //    if (!CheckRectCollision(colMap, newRect)) {
+    // Atualiza a linha do frameSheet na qual o inimigo se encontra
+    if(enemy->currentFrameIndex/5 == 1){
+        enemy->currentFrameSheetLine++;
+    }
+    else if(enemy->currentFrameIndex/11==1){
+        enemy->currentFrameSheetLine++;
+    }
+    if(enemy->currentFrameIndex > enemy->frameQtd)
+    {
+        enemy->currentFrameIndex = 0;  // Volta para o primeiro sprite
+        enemy->currentFrameSheetLine=0;
+    }
+
     enemy->position = newPosition;
     enemy->velocity = (Vector2){direction.x * enemy->speed, direction.y * enemy->speed};
-    // } else {
-    //     // Se colidir, tenta mover só no eixo X
-    //     newPosition = (Vector2){
-    //         enemy->position.x + direction.x * enemy->speed * deltaTime,
-    //         enemy->position.y
-    //     };
-    //     newRect.x = newPosition.x;
-    //     newRect.y = newPosition.y;
-
-    //     if (!CheckRectCollision(colMap, newRect)) {
-    //         enemy->position.x = newPosition.x;
-    //     } else {
-    //         // Senão, tenta só no eixo Y
-    //         newPosition = (Vector2){
-    //             enemy->position.x,
-    //             enemy->position.y + direction.y * enemy->speed * deltaTime
-    //         };
-    //         newRect.x = newPosition.x;
-    //         newRect.y = newPosition.y;
-
-    //         if (!CheckRectCollision(colMap, newRect)) {
-    //             enemy->position.y = newPosition.y;
-    //         }
-    //     }
-    // }
 }
 
 void DrawEnemy(Enemy *enemy, bool debug)
 {
+    Vector2 framePosition = function_line_frameSheet(enemy);
+
     if (!enemy->active)
         return;
 
     // Desenha o inimigo
-    DrawTextureV(enemy->texture, enemy->position, enemy->color);
+    Rectangle spriteRectangle = {
+        framePosition.x,
+        framePosition.y,           
+        enemy->spriteWidth,    
+        enemy->spriteHeight   
+    };
+    
+    DrawTextureRec(enemy->texture, spriteRectangle, enemy->position, WHITE);
 
     // 🔨Desenha borda (Hitbox de debug)
     Rectangle hitbox = {
@@ -173,6 +187,7 @@ void DrawEnemy(Enemy *enemy, bool debug)
             DrawLineEx(enemy->waypoints[i], enemy->waypoints[i + 1], 1, ORANGE);
         }
     }
+
 }
 
 bool CheckPlayerEnemyCollision(Player *player, Enemy *enemy)
@@ -194,4 +209,16 @@ bool CheckPlayerEnemyCollision(Player *player, Enemy *enemy)
         enemy->Yhitbox};
 
     return CheckCollisionRecs(playerRect, enemyRect);
+}
+
+Vector2 function_line_frameSheet(Enemy *enemy){
+
+    Vector2 frameSheetMatrix[10][10], framePosition;
+    int squareSize = 32; //Lado do quadrado
+
+    //A cada 6 frames, mais 56 nos eixos X e Y
+    int spritePositionX = 16 + 64*enemy->currentFrameIndex;
+    int spritePositionY = 16 + 64*enemy->currentFrameSheetLine;
+
+    return framePosition = (Vector2) {spritePositionX, spritePositionY};
 }

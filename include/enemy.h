@@ -18,6 +18,8 @@ typedef struct
     float speed;
     float Xhitbox;
     float Yhitbox;
+    int spriteHeight;
+    int spriteWidth;
 
     // Sistema de patrulha
     Vector2 waypoints[MAX_WAYPOINTS];
@@ -25,8 +27,9 @@ typedef struct
     int currentWaypoint;
     bool movingForward;
 
-    Rectangle currentFrame;
-    int frameCount;
+    Vector2 framePosition;
+    int currentFrameSheetLine;
+    int frameQtd;
     int currentFrameIndex;
     float frameTime;
     float frameTimer;
@@ -50,5 +53,7 @@ void DrawEnemy(Enemy *enemy, bool debug);
 
 // Verifica colisão entre o inimigo e um retângulo
 bool CheckEnemyCollision(Enemy *enemy, Rectangle rect);
+
+Vector2 function_line_frameSheet(Enemy *enemy);
 
 #endif
