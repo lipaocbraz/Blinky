@@ -33,6 +33,8 @@ void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFra
     enemy->frameTime = 0.05f;
     enemy->frameTimer = 0.0f;
     enemy->flipX = false;
+    enemy->texture = LoadTexture(firstFramePath);
+    enemy->movingForward = true;
     
     // Primeiro waypoint é a posição inicial
     enemy->waypoints[0] = startPos;

@@ -33,6 +33,7 @@ typedef struct
     float frameTime;        // Tempo de espera (em segundos) até trocar para o próximo sprite
     float frameTimer;       // Timer que acumula o tempo decorrido desde o último frame (para controle de animação)
     bool flipX;             // Flag para virar o sprite horizontalmente (útil para inverter a direção sem ter novos assets)
+    
 
     bool active;
     Color color;
