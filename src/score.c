@@ -37,7 +37,7 @@ void LoadScoreList(double scores[], int *count)
 // Salva a lista de scores de volta no arquivo
 void saveScoreList(double scores[], int count)
 {
-    FILE *file = fopen(SCORE_FILE, "w");
+    FILE *file = fopen(SCORE_FILE, "a");
 
     if (file != NULL)
     {

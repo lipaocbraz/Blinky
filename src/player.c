@@ -68,3 +68,5 @@ void unloadPlayer(Player *p)
     UnloadTexture(p->texture);
     TraceLog(LOG_INFO, "Heroi descarregado");
 }
+
+
