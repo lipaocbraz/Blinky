@@ -146,7 +146,7 @@ int main(void)
             int currentW = GetScreenWidth();
             int currentH = GetScreenHeight();
 
-            const char *titulo = "MEU JOGO BLINKY";
+            const char *titulo = "BLINKY";
             int fontSizeTitulo = 40;
 
             const char *instrucao = "Pressione ENTER para JOGAR";
