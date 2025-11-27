@@ -59,6 +59,8 @@ int main(void)
             UpdateEnemy(&entityState.enemy3, GetFrameTime());
             UpdateEnemy(&entityState.enemy4, GetFrameTime());
 
+            TraceLog(LOG_INFO, "frame do fantasma 1: %i", entityState.enemy1.currentFrameIndex);
+
             // Verifica colisão do jogador com o item (chave)
             if (CheckItemCollision(&entityState.keyItem1, entityState.hero.rectangleHitbox, &entityState.hero))
             {

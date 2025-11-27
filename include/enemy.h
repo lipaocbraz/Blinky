@@ -27,13 +27,12 @@ typedef struct
     int currentWaypoint;
     bool movingForward;
 
-    Vector2 framePosition;
-    int currentFrameSheetLine;
-    int frameQtd;
-    int currentFrameIndex;
-    float frameTime;
-    float frameTimer;
-    bool flipX; // Para virar o sprite (esquerda/direita)
+    int frameQtd;           // Quantidade total de sprites (frames) na animação
+    int currentFrameIndex;  // Índice do frame atual (de 0 até frameQtd - 1)
+    int currentFrameSheetLine; // Linha do spritesheet que o jogo está usando
+    float frameTime;        // Tempo de espera (em segundos) até trocar para o próximo sprite
+    float frameTimer;       // Timer que acumula o tempo decorrido desde o último frame (para controle de animação)
+    bool flipX;             // Flag para virar o sprite horizontalmente (útil para inverter a direção sem ter novos assets)
 
     bool active;
     Color color;
@@ -45,10 +44,8 @@ void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFra
 // Adiciona um ponto de patrulha ao inimigo
 void AddWaypoint(Enemy *enemy, Vector2 waypoint);
 
-// Atualiza a lógica do inimigo (movimento e patrulha) (código correto, com o objeto colMap: void UpdateEnemy(Enemy* enemy, CollisionMap* colMap, float deltaTime);)
 void UpdateEnemy(Enemy *enemy, float deltaTime);
 
-// Desenha o inimigo na tela
 void DrawEnemy(Enemy *enemy, bool debug);
 
 // Verifica colisão entre o inimigo e um retângulo

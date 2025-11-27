@@ -33,9 +33,6 @@ void InitEnemy(Enemy *enemy, Vector2 startPos, float speed, const char *firstFra
     enemy->frameTime = 0.05f;
     enemy->frameTimer = 0.0f;
     enemy->flipX = false;
-    enemy->texture = LoadTexture(firstFramePath);
-    enemy->movingForward = true;
-    enemy->framePosition = 
     
     // Primeiro waypoint é a posição inicial
     enemy->waypoints[0] = startPos;
@@ -70,6 +67,7 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
 
     float distance = sqrtf(direction.x * direction.x + direction.y * direction.y);
 
+    //=================LOGICA DA MOVIMENTAÇÃO DO INIMIGO===============
     // Se chegou perto do waypoint, avança para o próximo
     if (distance < 5.0f)
     {
@@ -94,6 +92,7 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
         return;
     }
 
+    //==========================================ESPAÇO DE TEMPO ENTRE OS SPRITES==============================================
     // Se passou tempo suficiente (frameTime), troca de sprite
     enemy->frameTimer += deltaTime;
     if (enemy->frameTimer >= enemy->frameTime)
@@ -102,25 +101,7 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
         enemy->currentFrameIndex++;
     }
 
-    // Normaliza a direção
-    direction.x /= distance;
-    direction.y /= distance;
-
-    // Calcula nova posição
-    Vector2 newPosition = {
-        enemy->position.x + direction.x * enemy->speed * deltaTime,
-        enemy->position.y + direction.y * enemy->speed * deltaTime};
-
-    // Cria retângulo para testar colisão
-    Rectangle newRect = {
-        newPosition.x,
-        newPosition.y,
-        enemy->Xhitbox,
-        enemy->Yhitbox};
-
-    DrawRectangleLinesEx(newRect, 10, GREEN);
-
-    // Atualiza a linha do frameSheet na qual o inimigo se encontra
+    // Atualiza a linha do frameSheet na qual o inimigo se encontra (INTERVALO BUGADO)
     if(enemy->currentFrameIndex/5 == 1){
         enemy->currentFrameSheetLine++;
     }
@@ -132,6 +113,25 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
         enemy->currentFrameIndex = 0;  // Volta para o primeiro sprite
         enemy->currentFrameSheetLine=0;
     }
+
+    // Normaliza a direção
+    direction.x /= distance;
+    direction.y /= distance;
+
+    // Calcula nova posição
+    Vector2 newPosition = {
+        enemy->position.x + direction.x * enemy->speed * deltaTime,
+        enemy->position.y + direction.y * enemy->speed * deltaTime};
+
+
+    //🔨 Cria retângulo para testar colisão
+    Rectangle newRect = {
+        newPosition.x,
+        newPosition.y,
+        enemy->Xhitbox,
+        enemy->Yhitbox};
+
+    DrawRectangleLinesEx(newRect, 10, GREEN);
 
     enemy->position = newPosition;
     enemy->velocity = (Vector2){direction.x * enemy->speed, direction.y * enemy->speed};
@@ -214,9 +214,8 @@ bool CheckPlayerEnemyCollision(Player *player, Enemy *enemy)
 Vector2 function_line_frameSheet(Enemy *enemy){
 
     Vector2 frameSheetMatrix[10][10], framePosition;
-    int squareSize = 32; //Lado do quadrado
 
-    //A cada 6 frames, mais 56 nos eixos X e Y
+    //A cada 6 frames, mais 64 nos eixos X e Y
     int spritePositionX = 16 + 64*enemy->currentFrameIndex;
     int spritePositionY = 16 + 64*enemy->currentFrameSheetLine;
 
