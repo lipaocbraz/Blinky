@@ -126,14 +126,14 @@ void UpdateEnemy(Enemy *enemy, float deltaTime)
         enemy->position.y + direction.y * enemy->speed * deltaTime};
 
 
-    //🔨 Cria retângulo para testar colisão
-    Rectangle newRect = {
-        newPosition.x,
-        newPosition.y,
-        enemy->Xhitbox,
-        enemy->Yhitbox};
+    // //🔨 Cria retângulo para testar colisão
+    // Rectangle newRect = {
+    //     newPosition.x,
+    //     newPosition.y,
+    //     enemy->Xhitbox,
+    //     enemy->Yhitbox};
 
-    DrawRectangleLinesEx(newRect, 10, GREEN);
+    // DrawRectangleLinesEx(newRect, 10, GREEN);
 
     enemy->position = newPosition;
     enemy->velocity = (Vector2){direction.x * enemy->speed, direction.y * enemy->speed};
@@ -156,39 +156,39 @@ void DrawEnemy(Enemy *enemy, bool debug)
     
     DrawTextureRec(enemy->texture, spriteRectangle, enemy->position, WHITE);
 
-    // 🔨Desenha borda (Hitbox de debug)
-    Rectangle hitbox = {
-        enemy->position.x,
-        enemy->position.y,
-        enemy->Xhitbox,
-        enemy->Yhitbox};
-    DrawRectangleLinesEx(hitbox, 2, RED);
+    // // 🔨Desenha borda (Hitbox de debug)
+    // Rectangle hitbox = {
+    //     enemy->position.x,
+    //     enemy->position.y,
+    //     enemy->Xhitbox,
+    //     enemy->Yhitbox};
+    // DrawRectangleLinesEx(hitbox, 2, RED);
 
-    // 🔨 Debug: desenha rota de patrulha
-    if (debug && enemy->waypointCount > 0)
-    {
-        Vector2 target = enemy->waypoints[enemy->currentWaypoint];
-        DrawLineEx(
-            (Vector2){enemy->position.x + enemy->Xhitbox / 2, enemy->position.y + enemy->Yhitbox / 2},
-            target,
-            2, YELLOW);
+    // // 🔨 Debug: desenha rota de patrulha
+    // if (debug && enemy->waypointCount > 0)
+    // {
+    //     Vector2 target = enemy->waypoints[enemy->currentWaypoint];
+    //     DrawLineEx(
+    //         (Vector2){enemy->position.x + enemy->Xhitbox / 2, enemy->position.y + enemy->Yhitbox / 2},
+    //         target,
+    //         2, YELLOW);
 
-        // Desenha waypoints
-        for (int i = 0; i < enemy->waypointCount; i++)
-        {
-            DrawCircleV(enemy->waypoints[i], 5, ORANGE);
-            if (i == enemy->currentWaypoint)
-            {
-                DrawCircleV(enemy->waypoints[i], 8, YELLOW);
-            }
-        }
+    //     // Desenha waypoints
+    //     for (int i = 0; i < enemy->waypointCount; i++)
+    //     {
+    //         DrawCircleV(enemy->waypoints[i], 5, ORANGE);
+    //         if (i == enemy->currentWaypoint)
+    //         {
+    //             DrawCircleV(enemy->waypoints[i], 8, YELLOW);
+    //         }
+    //     }
 
-        // Desenha linhas entre waypoints
-        for (int i = 0; i < enemy->waypointCount - 1; i++)
-        {
-            DrawLineEx(enemy->waypoints[i], enemy->waypoints[i + 1], 1, ORANGE);
-        }
-    }
+    //     // Desenha linhas entre waypoints
+    //     for (int i = 0; i < enemy->waypointCount - 1; i++)
+    //     {
+    //         DrawLineEx(enemy->waypoints[i], enemy->waypoints[i + 1], 1, ORANGE);
+    //     }
+    // }
 
 }
 

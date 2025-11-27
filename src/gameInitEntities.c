@@ -82,9 +82,9 @@ bool iniciandoInimigos(entityState *entityState){
     AddWaypoint(&entityState->enemy4, AdjustPosition(1863.0f, 498.0f));
 
     // Item (chave)
-    InitItem(&entityState->keyItem1, "assets/keyItem.png", AdjustPosition(1800.0f, 500.0f));
-    InitItem(&entityState->keyItem2, "assets/keyItem.png", AdjustPosition(955.0f, 215.0f));
-    InitItem(&entityState->keyItem3, "assets/keyItem.png", AdjustPosition(1045.0f, 782.0f));
+    InitItem(&entityState->keyItem1, "assets/Key 2 - GREY - 0002.png", AdjustPosition(1800.0f, 500.0f));
+    InitItem(&entityState->keyItem2, "assets/Key 2 - GREY - 0002.png", AdjustPosition(955.0f, 215.0f));
+    InitItem(&entityState->keyItem3, "assets/Key 2 - GREY - 0002.png", AdjustPosition(1045.0f, 782.0f));
 
     return true;
 }

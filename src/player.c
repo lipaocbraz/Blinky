@@ -8,7 +8,7 @@ const float playerYhitbox_DEBUG = 200.0f;
 void initPlayer(Player *p, const char *texturePath, Vector2 startPos)
 {
     p->texture = LoadTexture(texturePath);
-    p->speed = 5.0f;
+    p->speed = 3.0f;
 
     p->position = startPos;
     p->keysCollected = 0;
@@ -56,11 +56,11 @@ void drawPlayer(Player *p)
     DrawTextureV(p->texture, p->position, WHITE);
 
     // 🔨 Calcula o ponto de colisão que o UpdatePlayer está mirando (Base central)
-    float debugX = p->position.x + p->Xhitbox / 2.0f;
-    float debugY = p->position.y + p->Yhitbox / 2.0f;
+    // float debugX = p->position.x + p->Xhitbox / 2.0f;
+    // float debugY = p->position.y + p->Yhitbox / 2.0f;
 
-    // 🔨 Desenha um pequeno círculo vermelho no ponto exato de colisão
-    DrawCircle((int)debugX, (int)debugY, 3, RED);
+    // // 🔨 Desenha um pequeno círculo vermelho no ponto exato de colisão
+    // DrawCircle((int)debugX, (int)debugY, 3, RED);
 }
 
 void unloadPlayer(Player *p)
