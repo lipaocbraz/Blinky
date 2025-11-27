@@ -1,7 +1,3 @@
-Com certeza\! Aqui está o arquivo **README.md** formatado em Markdown, pronto para ser copiado e colado no seu repositório do GitHub.
-
------
-
 # 👻 Blinky: O Jogo de Fuga no Labirinto
 
 Este é um projeto de jogo 2D simples desenvolvido em **C** utilizando a biblioteca **Raylib**. O objetivo é um jogo de fuga com elementos de labirinto, coleta de chaves e inimigos (fantasmas) patrulhando.
